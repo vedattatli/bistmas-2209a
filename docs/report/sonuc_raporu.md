@@ -54,9 +54,14 @@ döneminde (84 aylık dönem) aylık yeniden dengelemeli, adım adım ileri (wal
 (İP5) doğrulanmış; ayrıca gerçek zamanlı ileriye dönük "kâğıt üzerinde" bir koşu ve e-posta raporu prototipi
 kurulmuştur.
 
+Ajanlar arasındaki veri akışı ve doğrulama adımları Şekil 1'de özetlenmiştir.
+
+![Şekil 1. Sistem mimarisi: deterministik ajanlar (İP1–İP3), maskeli girdiyle çalışan LLM jürisi (İP4), geriye dönük test, denetimler ve ileriye dönük koşu.](figures/sekil_mimari.png)
+
 Tüm yazılım Python 3.12 ile geliştirilmiştir. Bütçe gerektirmeyen, tekrarlanabilir bir kurulum için LLM jürisi
 yerel olarak (Ollama üzerinde, sabitlenmiş model sürümüyle) çalıştırılmış, tüm veriler ücretsiz ve resmi
-kaynaklardan sağlanmıştır.
+kaynaklardan sağlanmıştır. Kaynak kod, testler ve belgeler açık kaynak olarak yayımlanmıştır:
+https://github.com/vedattatli/bistmas-2209a
 
 ## 3. Rapor dönemlerinde yapılan çalışmalar
 
@@ -164,6 +169,21 @@ iletir. Bu çıktılar yatırım tavsiyesi değildir.
 * Sistemin kendisinde araştırma konusu olarak kullanılan LLM jürisi (Qwen3.5 9B) yerel olarak çalıştırılmış olup bu
   beyanın kapsamı dışındadır.
 
+
+### 3.9 Çalışma takvimi ve başarı ölçütlerinin gerçekleşme durumu
+Öneride her iş paketi için bir dönem ve başarı ölçütü tanımlanmıştı. Aşağıdaki tablo bu ölçütleri ve
+gerçekleşme durumunu karşılaştırmaktadır.
+
+| İş paketi (önerideki dönem) | Başarı ölçütü (öneri) | Gerçekleşme |
+|---|---|---|
+| İP-1 Aday havuzu ajanı (12/2025) | BIST-100 evreni; eksik veri oranı < %2 | Gerçekleşti. Zaman noktası BIST-100 evreni kuruldu ve Borsa İstanbul'un 135 resmi bileşen listesiyle birebir doğrulandı. Her karar tarihinde endeks üyelerinin %99,3–100'ünün işlem fiyatı mevcuttur. |
+| İP-2 Veri toplama ve özellik deposu (01–02/2026) | ETL akışı otomatik; özellik deposundan sorgu ≤ 300 ms | Gerçekleşti, kaynak değişikliğiyle. Finnhub yerine ücretsiz kamu kaynakları (KAP, İş Yatırım, Borsa İstanbul DataStore, TCMB EVDS) kullanıldı. ETL, kaldığı yerden devam edebilen komut satırı işleri olarak otomatiktir. Bir karar tarihinin özellik deposu sorgusu yaklaşık 2 ms sürmektedir; finansal tablo kapsamı %99,7'dir. |
+| İP-3 Faktör hesaplama ve normalizasyon (03–04/2026) | Tüm faktörler hesaplanmış; faktör korelasyon raporu | Gerçekleşti, sadeleştirilerek. Dört faktör grubu yerine üç sütun (temel güç, değerleme, momentum-risk) sektör içi sağlam z-skorla hesaplandı. Sütunlar arası Spearman korelasyonu 0,17–0,28'dir; sütunlar birbirinden büyük ölçüde bağımsızdır. |
+| İP-3 Filtreleme ve ön eleme (05/2026) | Filtre sonrası eksik veri oranı < %1; Top-10 listesi | Gerçekleşti. 84 ayın tamamında Top-10 listesi üretildi; Top-10 adayların tamamında üç sütun da hesaplıdır. |
+| İP-4 Konsensüs ve raporlama modülü (05–08/2026) | Top-3 otomatik üretiliyor; özet rapor şablonu (e-posta ve ayrıntı) | Gerçekleşti. Üç LLM jüri ajanı, konsensüs ve Top-3 seçimi; aylık karar raporu ve e-posta raporu prototipi geliştirildi (Ek-1). |
+| İP-5 Sistem doğrulaması (08–10/2026) | CAGR, Sharpe, Sortino, en büyük düşüş; kıyaslama | Gerçekleşti. 84 aylık geriye dönük test; TL, USD ve reel metrikler; eşit ağırlıklı BIST-100 ile kıyaslama ve istatistiksel testler (4.1–4.2). |
+| Sonuç analizi ve raporlama (11/2026) | Nihai rapor; CAGR ≥ %15, Sharpe > 1,2; açık kaynak depo; Llama 3 70B geçiş planı | Kısmen. Rapor ve açık kaynak depo tamamlandı. Nominal CAGR hedefi tüm portföylerde aşıldı, ancak bu enflasyondan kaynaklanmaktadır; politika faizi düşülerek hesaplanan Sharpe > 1,2 hedefine ulaşılamadı. 70B model geçişi donanım kısıtı nedeniyle yapılmadı; yerine farklı model aileleriyle çapraz jüri sonraki çalışma olarak önerildi (4.4). |
+
 ## 4. Sonuç
 
 ### 4.1 Kural tabanlı sistem (2018–2024, 84 ay)
@@ -194,7 +214,7 @@ Birincil analizde (`prereg-v2`) jüri 84 ayın tamamında 2.520 değerlendirmeni
 | Hibrit = kural tabanlı Top-10 | %43,7 | 0,67 | −%40,3 | %4,4 | %6,4 | +%0,06 (0,12) | 0 |
 | BIST-100 eşit ağırlık (ölçüt) | %44,1 | 0,73 | −%35,5 | %4,7 | %6,7 | — | — |
 
-![Şekil 1. Hibrit, kural tabanlı ve karşılaştırma portföylerinin 2018–2024 net değer eğrileri (sol: TL, sağ: ABD doları; logaritmik ölçek, işlem maliyetleri düşülmüş).](figures/sekil1_nav.png)
+![Şekil 2. Hibrit, kural tabanlı ve karşılaştırma portföylerinin 2018–2024 net değer eğrileri (sol: TL, sağ: ABD doları; logaritmik ölçek, işlem maliyetleri düşülmüş).](figures/sekil1_nav.png)
 
 * **H1 desteklenmemiştir.** Hibrit Top-3, kural tabanlı Top-3'e göre ayda ortalama %0,43 daha düşük getiri
   sağlamıştır; fark istatistiksel olarak anlamlı değildir (Newey-West t = −0,56, p = 0,58; aktif getirinin %95
@@ -213,7 +233,7 @@ Birincil analizde (`prereg-v2`) jüri 84 ayın tamamında 2.520 değerlendirmeni
   anlamlı değildir; deneme sayısına göre düzeltilmiş Sharpe olasılığı hibrit Top-3 için 0,02'dir.
 
 ### 4.3 Açıklanabilirlik ve tutarlılık — H2
-![Şekil 2. Sol: jüri ajanlarının puan dağılımı (her ajan 840 değerlendirme); sağ: aylık jüri skoru J ile kural tabanlı bileşik sıra.](figures/sekil2_juri.png)
+![Şekil 3. Sol: jüri ajanlarının puan dağılımı (her ajan 840 değerlendirme); sağ: aylık jüri skoru J ile kural tabanlı bileşik sıra.](figures/sekil2_juri.png)
 
 * **Gerekçelerin girdiye dayanması.** 2.520 gerekçenin %99,7'si yalnızca istemde verilen göstergelere atıf yapmıştır
   (ajanlara göre %100, %99,9 ve %99,3). Gerekçelerde şirket adı, işlem kodu, yıl veya ay adı gibi bilgi sızıntısı
@@ -229,7 +249,7 @@ Birincil analizde (`prereg-v2`) jüri 84 ayın tamamında 2.520 değerlendirmeni
   sınırdaki adaylar arasında yer değiştirmektedir; bu da J'nin ek getiri bilgisi taşımamasıyla tutarlıdır.
 * **Ajanlar arası uyum.** Ajanların aynı aday için verdikleri puanlar arasındaki ortalama ikili Spearman korelasyonu
   −0,10, Krippendorff α (aralık) −0,19'dur. Her ajan farklı bir gösterge grubunu gördüğü için bu bekleniyordu:
-  jüri tek bir görüşün tekrarı değil, üç ayrı bakış açısıdır. Puan dağılımları da farklıdır (Şekil 2). Değer ajanı
+  jüri tek bir görüşün tekrarı değil, üç ayrı bakış açısıdır. Puan dağılımları da farklıdır (Şekil 3). Değer ajanı
   en cömert, Risk/Zamanlama ajanı en eleştirel ajandır.
 * **Ezber ve sızıntı denetimleri** (84 adaylık tabakalı örneklem):
   * Kimlik tahmini: maskelenmiş göstergelerden şirketi doğru tahmin oranı %0'dır (şans düzeyi ~%1). Dönem (yıl ve
@@ -284,6 +304,7 @@ Birincil analizde (`prereg-v2`) jüri 84 ayın tamamında 2.520 değerlendirmeni
 * Ön kayıt belgeleri (`prereg-v1`, `prereg-v2`), veri sözlüğü, veri yönetişimi belgesi ve deney defteri.
 * İleriye dönük karar raporu ve e-posta raporu prototipi (Ek-1: 2026-09 kararı).
 * Sonuç tabloları ve şekiller (TL/USD/reel net değer eğrileri, yıllık aktif getiriler, jüri skor tanılamaları).
+* Yazılım deposunun README dosyasında ve bu raporda projenin TÜBİTAK 2209-A Üniversite Öğrencileri Araştırma Projeleri Destek Programı kapsamında desteklendiği belirtilmiştir.
 * Proje süresi içinde yayımlanmış veya gönderilmiş bir bildiri ya da makale bulunmamaktadır; sonuçların bildiri
   olarak hazırlanması sonraki çalışmalara bırakılmıştır.
 
@@ -301,11 +322,11 @@ kullanılmıştır:
 Claude Max aboneliği, yazılım geliştirme, veri analizi ve raporlamada kullanılan yapay zekâ destekli kodlama ve
 analiz aracıdır (bkz. 3.8). Abonelik bedelinin 9.000 TL'si TÜBİTAK desteğinden, kalan 17.999,75 TL'si yürütücü
 tarafından karşılanmıştır; iade edilecek kullanılmamış tutar yoktur. Ödemeler Google Play üzerinden yapıldığı için
-harcama belgeleri, yürütücü adına düzenlenmiş Google Play sipariş makbuzlarıdır (KDV gösterilmiştir).
+harcama belgeleri, yürütücü adına düzenlenmiş Google Play sipariş makbuzlarıdır (KDV gösterilmiştir) ve Ek-2'de verilmiştir.
 
 Veri için ücret ödenmemiştir: fiyat ve finansal tablo verileri ücretsiz kamu kaynaklarından (KAP, Borsa İstanbul
 DataStore ücretsiz dosyaları, İş Yatırım, TCMB EVDS) sağlanmış; araştırma konusu olan LLM jürisi ekibin kendi
 bilgisayarında yerel olarak çalıştırıldığı için API ücreti doğmamıştır.
 
 ---
-Proje yürütücüsü: Vedat Ali Tatlı — imza  Danışman: Hayri Öztürk — imza  Tarih: [ ]
+Proje yürütücüsü: Vedat Ali Tatlı — imza  Danışman: Hayri Öztürk — imza  Tarih: 22.10.2026

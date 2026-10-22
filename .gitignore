@@ -28,3 +28,6 @@ configs/local.toml
 
 # Claude Code local state
 .claude/
+
+# Submission copies with personal receipts (never committed)
+docs/report/teslim/

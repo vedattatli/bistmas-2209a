@@ -88,4 +88,10 @@ Both specifications are complete (2026-10-22): deterministic runs `det-v1`/`det-
 Result: H1 is not supported — the hybrid Top-3 trails the rule-based Top-3 by 0.43 %/month in v2 (NW t −0.56) and
 0.18 %/month in v1 (t −0.24), and no portfolio beats the point-in-time equal-weight BIST-100 benchmark.
 Every run appends a line to `data/runs/ledger.jsonl`. See `docs/experiment_log.md` for the narrative and the
-numbers, and `docs/report/` for the TÜBİTAK final report.
+numbers, and `docs/report/` for the TÜBİTAK final report (`sonuc_raporu.pdf`; built with `build_docx.py` and `make_pdf.sh`).
+
+## Acknowledgement
+
+This project was supported by TÜBİTAK (Scientific and Technological Research Council of Türkiye) under the 2209-A
+University Students Research Projects Support Programme (application no. 1919B012550729). Bu proje TÜBİTAK 2209-A
+Üniversite Öğrencileri Araştırma Projeleri Destek Programı kapsamında desteklenmiştir.
