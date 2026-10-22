@@ -219,7 +219,7 @@ Birincil analizde (`prereg-v2`) jüri 84 ayın tamamında 2.520 değerlendirmeni
 * **H1 desteklenmemiştir.** Hibrit Top-3, kural tabanlı Top-3'e göre ayda ortalama %0,43 daha düşük getiri
   sağlamıştır; fark istatistiksel olarak anlamlı değildir (Newey-West t = −0,56, p = 0,58; aktif getirinin %95
   bootstrap güven aralığı [−%1,68; +%0,86]). Top-5'te hibrit sistem ayda %0,15 öndedir, bu fark da anlamlı
-  değildir. Jüriye her ay 10 aday gittiği için Top-10 iki sistemde aynı portföydür.
+  değildir. Jüriye her ay 10 aday gittiği için Top-10 iki sistemde aynı portföydür. Portföylerin net değer eğrileri Şekil 2'de verilmiştir.
 * Aynı adaylara rastgele puan veren 500 "rastgele jüri" ile karşılaştırıldığında hibrit Top-3'ün getirisi bu
   dağılımın 41. yüzdeliğindedir (rastgele jürilerin CAGR ortalaması %36,6; %5–%95 aralığı %24,4–%49,1): jüri
   sıralaması, aday listesinin rastgele sıralanmasından ayırt edilememektedir.
