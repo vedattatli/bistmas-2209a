@@ -1,0 +1,17 @@
+{
+  "totalCount": 12,
+  "items": [
+    {"Tarih": "29-12-2017", "TP_DK_USD_A_YTL": "3.7719", "UNIXTIME": {"$numberLong": "1514505600"}},
+    {"Tarih": "30-12-2017", "TP_DK_USD_A_YTL": null, "UNIXTIME": {"$numberLong": "1514592000"}},
+    {"Tarih": "31-12-2017", "TP_DK_USD_A_YTL": null, "UNIXTIME": {"$numberLong": "1514678400"}},
+    {"Tarih": "01-01-2018", "TP_DK_USD_A_YTL": null, "UNIXTIME": {"$numberLong": "1514764800"}},
+    {"Tarih": "02-01-2018", "TP_DK_USD_A_YTL": "3.7776", "UNIXTIME": {"$numberLong": "1514851200"}},
+    {"Tarih": "03-01-2018", "TP_DK_USD_A_YTL": "3.7581", "UNIXTIME": {"$numberLong": "1514937600"}},
+    {"Tarih": "04-01-2018", "TP_DK_USD_A_YTL": "3.7534", "UNIXTIME": {"$numberLong": "1515024000"}},
+    {"Tarih": "05-01-2018", "TP_DK_USD_A_YTL": "3.7393", "UNIXTIME": {"$numberLong": "1515110400"}},
+    {"Tarih": "06-01-2018", "TP_DK_USD_A_YTL": null, "UNIXTIME": {"$numberLong": "1515196800"}},
+    {"Tarih": "07-01-2018", "TP_DK_USD_A_YTL": null, "UNIXTIME": {"$numberLong": "1515283200"}},
+    {"Tarih": "08-01-2018", "TP_DK_USD_A_YTL": "3.7409", "UNIXTIME": {"$numberLong": "1515369600"}},
+    {"Tarih": "09-01-2018", "TP_DK_USD_A_YTL": "", "UNIXTIME": {"$numberLong": "1515456000"}}
+  ]
+}

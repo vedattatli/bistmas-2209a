@@ -1,0 +1,6 @@
+ticker,kap_main_sector,kap_sub_sector,source,note
+ADANA,İMALAT,TAŞ VE TOPRAĞA DAYALI,"KAP delisted-company page; Adana Çimento (cement) merged into OYAKC 2020-05","successor OYAKC has the same sector"
+ANACM,İMALAT,TAŞ VE TOPRAĞA DAYALI,"KAP delisted-company page; Anadolu Cam (glass) merged into SISE 2020-10","glass is stone-and-soil manufacturing; SISE itself is listed under holdings on KAP today and is not changed here"
+SODA,İMALAT,KİMYA İLAÇ PETROL LASTİK VE PLASTİK ÜRÜNLER,"KAP delisted-company page; Soda Sanayii (chemicals) merged into SISE 2020-10","chemicals"
+TRKCM,İMALAT,TAŞ VE TOPRAĞA DAYALI,"KAP delisted-company page; Trakya Cam (glass) merged into SISE 2020-10","glass"
+KIPA,TOPTAN VE PERAKENDE TİCARET,PERAKENDE TİCARET,"KAP delisted-company page; Kipa Ticaret (retail) merged into MGROS 2018-08","retail"

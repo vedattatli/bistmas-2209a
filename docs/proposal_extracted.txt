@@ -1,0 +1,972 @@
+
+===== PAGE 1 =====
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TÜBİTAK 2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ 
+ 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+2025 Yılı 
+ 
+1. Dönem Başvurusu
+
+===== PAGE 2 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 2 
+  
+ 
+A. GENEL BİLGİLER 
+ 
+Başvuru Sahibinin Adı Soyadı: Vedat Ali Tatlı 
+Araştırma Önerisinin Başlığı: Kural ve LLM Tabanlı Hibrit Çoklu Ajan Sistemi ile Hisse Öneri Sistemi 
+Danışmanın Adı Soyadı: Hayri Öztürk 
+Araştırmanın Yürütüleceği Kurum/Kuruluş: Erciyes Üniversitesi 
+ 
+ 
+ÖZET 
+ 
+     Araştırma önerisi özetinin (1) bilimsel nitelik; (2) yöntem; (3) proje yönetimi ve (4) yaygın etki hakkında bilgileri 
+kapsaması beklenir. Bu bölümün en son yazılması önerilir.  
+ 
+ÖZET 
+Bu araştırmada finansal teknolojiler alanında hisse senedi seçimi problemini çözmek üzere kural tabanlı 
+(deterministik) analiz ile Büyük Dil Modelleri (LLM) tabanlı muhakemeyi birleştiren hibrit bir Çoklu Ajan Sistemi 
+(MAS) geliştirmeyi amaçlanmaktadır. Proje, yatırım kararlarının hem nicel doğruluk hem de nitel muhakeme 
+boyutlarını bütünleştiren özgün bir mimari sunmaktadır. 
+Böyle bir mimariye duyulan ihtiyacın temelinde, finans piyasalarının belirsizlik, veri çeşitliliği ve yorumlama 
+zorluklarıyla karakterize olması yatmaktadır. Literatürdeki mevcut sistemler ya tek bir LLM çekirdeğine dayalıdır 
+(örneğin FINCON, TradingGPT) ya da yalnızca deterministik modellerle sınırlıdır (Yu et al., 2024; Li et al., 
+2023). Bu proje, bu iki uç yaklaşım arasındaki boşluğu doldurmaktadır. Hisse seçimi süreci, Üretici (filtreleme) 
+ve Jüri (değerlendirme) katmanlarından oluşan iki aşamalı hibrit bir mimari ile yürütülmektedir. Üretici ajanlar, 
+temel analiz göstergeleriyle (F/K, ROIC, Net Borç/FAVÖK, vb.) şirketleri filtrelerken, Jüri ajanları (Değer, 
+Büyüme, Risk uzmanları) farklı yatırım felsefeleri doğrultusunda oylama yaparak nihai karara ulaşmaktadır. Bu 
+yapı, hem deterministik kesinliği hem de LLM’in açıklanabilir muhakemesini birleştirmektedir. 
+Tanımlanan bu hibrit yapıyı hayata geçirmek üzere proje, beş iş paketinden oluşan bir metodolojiyle 
+yürütülmektedir: (1) Dinamik BIST-100 evreninin belirlenmesi ve hayatta kalma ön yargısının (survivorship 
+bias) giderilmesi, (2) veri toplama ve özellik deposunun oluşturulması, (3) deterministik filtreleme ajanının 
+geliştirilmesi, (4) üç jüri ajanının paralel oylama ve konsensüs algoritmasının tasarımı, (5) sistemin geriye 
+dönük testlerle doğrulanması olmak üzere 5 iş paketinden oluşmaktadır. Python tabanlı geliştirilen sistemde, 
+veri akışı ve ajan koordinasyonu CrewAI veya LangGraph çerçevesiyle yönetilecektir. Performans ölçütleri, 
+yıllık bileşik getiri (CAGR), Sharpe oranı, Sortino oranı ve Maksimum Düşüş (Max Drawdown) gibi metriklerle 
+değerlendirilecektir. 
+Belirlenen bu metodolojinin uygulanması kapsamında, proje yürütücüsü Vedat Ali Tatlı, geliştirme sürecini iş 
+paketlerine göre yönetecektir. Çalışma takvimi 12 aya yayılmış olup, sistemin ilk 2 ayda veri altyapısı 
+kurulacak, 3–7. aylar arasında hibrit ajan mimarisi geliştirilecek, son 2 ayda geriye dönük test ve raporlama 
+yapılacaktır. 
+Bu 9 aylık çalışma takviminin (P4) sonunda tamamlanması hedeflenen bu proje, ulusal FinTek ekosisteminde 
+açıklanabilir, otonom ve çok bakış açılı yatırım destek sistemleri için ölçeklenebilir bir prototip oluşturacaktır. 
+Akademik düzeyde, kolektif zekâ ve hibrit ajan tabanlı finans karar sistemleri alanına özgün bir katkı 
+sağlayacak; pratikte ise yatırımcıların veri temelli, gerekçelendirilebilir kararlar almasına olanak tanıyacaktır. 
+Proje sonuçlarının, finansal karar destek sistemleri, portföy yönetimi ve yerli FinTek ürünlerinde ticarileştirilebilir 
+yapay zekâ altyapılarına dönüştürülmesi hedeflenmektedir. 
+Anahtar Kelimeler: Hibrit Çoklu Ajan Sistemi, Hisse Seçimi, LLM, Deterministik Analiz, Kolektif Zekâ 
+ 
+1. ARAŞTIRMA ÖNERİSİNİN BİLİMSEL NİTELİĞİ 
+ 
+===== PAGE 3 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 3 
+  
+ 
+ 1.1. Konunun Önemi ve Araştırma Önerisinin Bilimsel Niteliği 
+ 
+Araştırma önerisinde ele alınan konunun kapsamı, sınırları ve önemi ortaya konulur. Araştırma önerisi 
+kapsamında yapılacak çalışmalarla literatürdeki hangi eksikliğin nasıl giderileceği veya hangi soruna nasıl bir 
+çözüm getirileceği ilgili literatüre atıfla açıklanarak araştırma önerisinin bilimsel niteliği ortaya konulur. Araştırma 
+sorusu ve varsa hipotez(ler)i tanımlanır.  
+Projenin konusu, 12. Kalkınma Planı ve 2030 Sanayi ve Teknoloji Stratejisi’nde yer alan kritik teknoloji alanları 
+ile öncelikli Ar-Ge ve yenilik konuları ile ilişkili ise, ilişkilendirilme sebebi ve ilgili alana sağlayacağı yararlar 
+açıklanmalıdır. 
+ 
+Konunun Önemi   
+ Finansal piyasalar, yüksek hacimli ve farklı nitelikteki verilerle beslenen dinamik ve karmaşık sistemlerdir. Bu 
+ortamda rasyonel yatırım kararları almak, hem bireysel hem de kurumsal yatırımcılar için zaman alıcı ve 
+maliyetlidir. Geleneksel tekil yapay zekâ modelleri veya tekil LLM yaklaşımları, finansal metinleri doğru 
+yorumlamada ve aritmetik akıl yürütmede zorluklar yaşayabilmektedir. Hâlen, farklı yatırım felsefelerini (Değer, 
+Büyüme, Risk) tek bir potada inceleyen, şeffaf ve otonom bir öneri sistemi geliştirilmemiştir. Bu problemin 
+çözümü amacıyla, görevleri net bir şekilde ayrılmış, Üretici (Aday Belirleme ve Veri Profilleme) ve Jüri (Skorlama 
+ve Karar Verme) olarak iki ana gruba ayrılmış hiyerarşik bir çoklu ajan sistemi (MAS) mimarisi 
+planlanmaktadır.  Literatürdeki mevcut gelişmiş MAS yaklaşımları, genellikle analist ajanlardan gelen bilgileri 
+sentezleyen tek bir merkezi yönetici ajanın kararına dayanmaktadır. Bu merkezi yapı, tek bir ajanın akıl 
+yürütmesine dayandığından yanlılığa ve tek hata noktasına açıktır. Önerilen sistemin en yenilikçi yönü, bu 
+merkezi karar vericiyi, farklı uzmanlık alanlarına (Değerleme, Zamanlama, Risk) sahip olan Jüri Komitesi ile 
+değiştirmesidir. Sistemimizin amacı, hem üretici ajanlar aracılığıyla şeffaf ve denetlenmiş bir aday havuzu 
+sunmak hem de jüri aracılığıyla bu adayları farklı uzman bakış açılarından otonom olarak çok kriterli skorlamaya 
+tabi tutarak, yatırımcılara sağlam ve açıklanabilir bir yatırım önerisi sunmayı hedeflemektedir.   
+   
+ 
+Literatür Değerlendirmesi   
+ NeurIPS 2024’te sunulan FINCON adlı LLM tabanlı çoklu-ajan sistemi, yatırım firmalarını taklit ederek finansal 
+karar alma süreçlerini otomatikleştirmesi açısından önemli bir çalışmadır (Yu et al., 2024). Bu sistem, Müdür ve 
+Analist ajanlarından oluşan hiyerarşik bir yapı kullanır. Bu ajanlar haber analizi, veri analizi ve rapor analizi gibi 
+farklı görevleri senkronize bir işbirliği içinde yürütür. Sistem, ajanların yatırım inançlarını optimize etmek için 
+Kavramsal Sözel Pekiştirme ve metin tabanlı gradyan inişi gibi LLM-merkezli optimizasyon tekniklerini kullanır. 
+Ancak, FINCON'daki tüm ajanların LLM tabanlı olması ve yoruma açık görevler yapması, sistemin performansını 
+LLM'in o anki değerlendirme kalitesine bağımlı kılar ve deterministik filtrelemeyi zorlaştırır. Ayrıca proje, analist 
+girdilerini tek bir Müdür ajanında birleştirip optimize etmeye odaklanmıştır. Bu nedenle, farklı yatırım 
+felsefelerinin aynı anda simüle eden paralel bir jüri sistemine sahip olmaması, yatırımcı profillerine göre bütüncül 
+bir karar desteği sunmada eksik kalmaktadır.   
+   
+ Dodnikov (2024) tarafından yayınlanan "Finansta Çoklu Ajan Sistemleri Kullanarak İş Akışı Optimizasyonu"   
+başlıklı makale, verimliliği artırmak ve operasyonel maliyetleri düşürmek için çoklu-ajan sistemlerinin (MAS)   
+finans sektöründeki rolünü incelemektedir. Bu çalışma; kredi onayı, portföy yönetimi ve dolandırıcılık tespiti gibi 
+karmaşık süreçleri otomatikleştirmek için Veri Toplama Ajanı, Risk Değerlendirme Ajanı ve Karar Verme   
+Ajanı gibi uzmanlaşmış ajanların işbirliğine dayalı bir yapıda nasıl kullanılabileceğini ortaya koymaktadır. Sistem, 
+yapay zekâ ve makine öğrenimi ile donatılmış ajanların karar alma süreçlerini desteklemesini hedeflemektedir. 
+Ancak, bu sistem öncelikli olarak ajanların ortak bir hedefe (örn. kredinin onaylanması) ulaşmak için işbirliği 
+yaptığı ve görevleri birbirine devrettiği doğrusal iş akışlarının optimizasyonuna odaklanmıştır (Dodnikov, 2024). 
+Makale, deterministik kurallara dayalı filtreleme ajanları ile yoruma dayalı muhakeme yapan ajanları hibrit bir 
+yapıda birleştirmeyi tartışmamaktadır. Bu nedenle, farklı yatırım felsefelerini paralel uzmanlar olarak 
+modellemeyen ve nihai kararı bir jüri oylamasına tabi tutmayan mevcut yaklaşımlar, hisse senedi seçimi gibi çok 
+yönlü ve yoruma açık problemlere bütüncül bir çözüm sunmakta yetersiz kalmaktadır.   
+   
+ Demirtaş ve Şahin (2023) tarafından yayınlanan "Ajan Bazlı Finansal Modelleme ve Uygulama   
+Prosedürü" başlıklı çalışma, Ajan Bazlı Finansal Modelleme (ABFM) yöntemlerini ve prosedürlerini   
+incelemektedir. Bu çalışma, özellikle Santa Fe Enstitüsü Yapay Piyasası (SFI-ASM) gibi erken dönem yapay   
+borsa modellerine odaklanmaktadır. Bu modellerde, ajanlar genellikle teknik veya temel yatırımcılar gibi 
+heterojen grupları temsil eder. Bu ajanların temel özelliği, Genetik Algoritmalar (GA) veya Makine Öğrenmesi 
+(ML) gibi teknikleri kullanarak öğrenme ve evrimleşme yetenekleridir. Örneğin, SFI-ASM modelinde ajanlar, 
+ticaret kurallarını GA kullanarak optimize eder ve sürekli olarak öğrenirler. Ancak, bu sistemler ağırlıklı olarak, 
+ajanların bir pazar içinde etkileşime girdiği ve evrimsel olarak stratejilerini geliştirdiği "bottom-up" simülasyonlara 
+odaklanmıştır (Demirtaş & Şahin, 2023). Bu makale, matematiksel kuralları deterministik olarak uygulayan araç-
+ajanlar ile farklı yatırım felsefeleri temelinde muhakeme yürüten Yapay Zekâ (LLM) tabanlı jüri ajanlarını 
+birleştiren hibrit bir yapıyı tartışmamaktadır. Bu nedenle, ajanların evrimleştiği bir simülasyon yerine, katı 
+filtrelemeden geçmiş hisseleri paralel ve farklı felsefelerle oylayan bir karar komitesi yapısına sahip olmaması, 
+farklı yatırımcı profillerine yönelik özelleşmiş bir karar desteği sunmada eksik kalmaktadır.   
+   
+===== PAGE 4 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 4 
+  
+ 
+ Yıldız (2022) tarafından yayınlanan "Finans Alanında Yapay Zekâ Teknolojisinin Kullanımı: Sistematik Literatür 
+İncelemesi" başlıklı çalışma, Türkiye'deki (Google Akademi, DergiPark ve YÖK) veri tabanlarında yer alan 
+FinTek konulu akademik yayınları sistematik bir biçimde değerlendirmektedir. Bu çalışma, mevcut literatürün 
+mevcut durumunu tespit etmeyi ve eğilimleri belirlemeyi amaçlamaktadır. Bulgular, çalışmaların büyük 
+çoğunluğunun hisse senedi, altın ve Bitcoin gibi yatırım araçlarının fiyatını tahmin etmeye odaklandığını ve bu 
+amaçla en sık Yapay Sinir Ağları (YSA) ile son dönemde derin öğrenme tekniklerinin kullanıldığını ortaya 
+koymaktadır. Ancak, bu çalışma bir literatür derlemesi olduğundan, öncelikli olarak mevcut deneysel 
+çalışmalarda hangi spesifik tekniklerin (YSA, Derin Öğrenme vb.) hangi tahmin problemleri (fiyat tahmini, risk 
+tahmini vb.) için kullanıldığını sınıflandırmaya odaklanmıştır  (Yıldız, 2022). Bu nedenle, literatürdeki bu tahmin 
+odaklı yaklaşımların aksine, farklı yatırım felsefeleri temelinde muhakeme yürüten LLM tabanlı jüri ajanları ile 
+deterministik filtreleme ajanlarını birleştiren hibrit bir çoklu-ajan karar mimarisini tartışmamaktadır.   
+   
+ Nguyen, Pham ve Sun (2025) tarafından yayınlanan AUTOLAW adlı çalışma, büyük dil modellerinin (LLM) yerel 
+yasal düzenlemelere uyumunu artırmak için yenilikçi bir çerçeve sunmaktadır. Bu sistem, yerel düzenlemeleri 
+yansıtacak şekilde otomatik olarak emsal hukuk vakaları üretir ve yargısal karar alma süreçlerini simüle etmek 
+için LLM tabanlı jüri üyeleri kullanır. AUTOLAW'da jüri üyeleri, üretilen vakalar üzerindeki uzmanlıklarına göre 
+sıralanır ve yanlılığı en aza indirip tespit doğruluğunu artırmayı hedefleyen bir müzakere sürecine katılırlar. 
+Sistemin temel amacı, LLM'lerin yasal ihlalleri tespit etme yeteneğini değerlendirmek ve iyileştirmektir.Ancak, 
+AUTOLAW sistemi tamamen LLM tabanlı ajanlara dayanmakta ve karar sürecini bir müzakere üzerine 
+kurmaktadır. Bu makale, matematiksel kuralları deterministik olarak uygulayan araç-ajanlar ile farklı yatırım 
+felsefelerini temsil eden ve bu felsefeler temelinde muhakeme yürüten LLM tabanlı jüri ajanlarını birleştiren hibrit 
+bir yapıyı tartışmamaktadır. Ayrıca AUTOLAW'daki jüri, uzmanlığa dayalı bir sıralama ve müzakere ile ortak bir 
+karara varmayı hedeflerken, farklı bakış açılarının paralel olarak oylama yaptığı ve sonuçların belirli kurallarla 
+birleştirildiği bir karar komitesi mekanizmasına sahip değildir.   
+   
+ Stevens Teknoloji Enstitüsü'nden araştırmacılar tarafından yayınlanan "TradingGPT", katmanlı bellek ve 
+belirgin karakterlere sahip çoklu ajan sistemi ile finansal ticaret performansını artırmayı amaçlayan önemli bir 
+çalışmadır (Li et al., 2023). Bu proje, standart GPT bellek işlemelerinin aksine, insan bilişsel süreçlerine daha 
+yakın(kısa, orta, uzun vadeli) katmanlı bir bellek yapısı sunmaktadır. Ayrıca, ajanlara risk arayan, risk nötr veya 
+riskten kaçınan gibi bireyselleştirilmiş ticaret karakterleri atar ve ajanlar arası bir münazara mekanizması 
+kullanarak karar vermeyi hedefler. Bu sistemde ajanlar, katmanlı hafıza yapısını kullanarak çok kaynaklı geçmiş 
+eylemleri ve piyasa içgörülerini entegre eder, stratejiler formüle eder ve yatırım kararları hakkında diğer ajanlarla 
+tartışmaya girebilirler. TradingGPT'nin amacı, ajanların katmanlı hafıza işleme ve sürekli bilgi alışverişi yoluyla 
+geçmiş alım satımlara ve gerçek zamanlı piyasa ipuçlarına uyum sağlayarak üstün otomatik alım-satım 
+performansı elde etmektir. Ancak, bu sistemde LLM'ler, hem veri yorumlama hem de nihai karar alma 
+süreçlerinin tamamında karar çekirdeği olarak kullanılmaktadır. Bu durum, özellikle filtreleme ve ön analiz 
+aşamalarında LLM kaynaklı belirsizlik riskini artırabilir.   
+   
+ Pandey, Ng ve Lim (2000) tarafından sunulan “Çoklu-Ajanlı Finansal Alım Satım Sisteminde Finansal 
+Danışman Ajanı” başlıklı çalışma, çoklu-ajanlı bir finansal alım-satım sistemi (MAFTS) tanımlamaktadır. Bu 
+sistem, hisse senedi fiyatlarını izleyerek portföy yönetimine destek olmayı amaçlamaktadır. Bu sistemde, farklı 
+işlevlere sahip uzmanlaşmış ajanlar bulunur: Kullanıcıyı temsil eden ve diğer ajanları koordine eden Finansal 
+Danışman Ajanı (FAA), piyasa analizi yapıp alım-satım sinyalleri üreten Piyasa Analiz Ajanı (MAA), finansal 
+verileri çeken Finansal Veri Çıkarma Ajanı (FDEA) ve alım-satım emirlerini gerçekleştiren Aracı Kurum Ajanı 
+(BHA). Ajanlar finansal bilgileri toplar, analiz eder ve kullanıcı kriterlerine göre portföyü optimize eder. Ancak, bu 
+sistemi öncelikli olarak finansal alım-satım sürecindeki işlevsel görevlerin (veri toplama, analiz, emir iletme) farklı 
+ajanlara dağıtılmasına ve bu ajanların Finansal Danışman Ajanı koordinasyonunda işbirliği yapmasına 
+odaklanmıştır. Karar mekanizması, Finansal Danışman Ajanı’nın Piyasa Analiz Ajanı’ndan gelen sinyalleri 
+kullanıcı politikalarına göre değerlendirmesine dayanmaktadır. Ancak sistem, farklı uzman görüşlerinin paralel 
+olarak oylanabildiği bir karar komitesi yapısını içermemektedir.   
+   
+ Raudys ve Zliobaite (2006) tarafından sunulan "Finansal Zaman Serilerinin Tahmini İçin Çoklu Ajan Sistemi"   
+başlıklı çalışma, durağan olmayan finansal zaman serilerinin farklı segmentlerinin karakterini dikkate almak   
+amacıyla çoklu ajan sistemine dayalı bir tahmin algoritması önermektedir. Bu sistemde, tek bir tahmin kuralı   
+yerine, her biri farklı başlangıç ağırlıklarına sahip ve Tek Katmanlı Perseptronlar (SLP) ile temsil edilen birden 
+fazla uyarlanabilir tahmin ajanı kullanılır. Bu ajanlar rekabet eder ve nihai tahmin kararı, en başarılı ajanlardan 
+oluşan bir grubun çoğunluk oylaması ile verilir. Sistemin temel amacı, kısa eğitim dizileri kullanarak ve değişen 
+ortamlara hızla uyum sağlayarak bir adım sonraki tahmin hatasını azaltmaktır. Ancak, bu sistem öncelikli olarak 
+finansal zaman serilerinin tahmin doğruluğunu artırmak için, benzer yapıda ancak farklı parametrelerle 
+başlatılmış uyarlanabilir ajanların rekabetine ve performansa dayalı seçimine odaklanmıştır (Raudys & Zliobaite, 
+2006). Ayrıca sistemdeki karar mekanizması, geçmiş performansa dayalı olarak seçilen ajanların çoğunluk 
+oylamasıyken, farklı felsefeleri paralel uzmanlar olarak temsil eden ve kararı bir jüri ile oylayan bir 
+mekanizmanın bulunmayışı, mevcut çözümleri bu noktada yetersiz kılmaktadır.   
+   
+ Choi et al. (2025) tarafından sunulan "Yapılandırılmamışı Yapılandırma: Finansal KPI'ları ve Rehberliği 
+Çıkarmak ve Sorgulamak İçin Çoklu Ajan Sistemi" başlıklı çalışma, yapılandırılmamış finansal belgelerden (örn. 
+===== PAGE 5 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 5 
+  
+ 
+SEC dosyaları, kazanç dökümleri) yapılandırılmış temel performans göstergelerini (KPI) çıkarmak ve bu verilere 
+doğal dil sorguları ile erişmek için LLM tabanlı çoklu ajan sistemini önermektedir. Bu sistem, biri 
+yapılandırılmamış metinden KPI'ları tanımlayan, standartlaştıran ve doğrulayan bir Çıkarım Ajanı, diğeri ise 
+doğal dil sorgularını bu yapılandırılmış veriler üzerinde yürütülebilir SQL ifadelerine çeviren bir Metinden-SQL'e 
+Ajanı olmak üzere iki uzmanlaşmış ajandan oluşur. Sistem, doğruluğu artırmak için alan odaklı sistemler ve 
+kural tabanlı mantık/doğrulama adımlarını entegre eder. Ancak, bu sistem öncelikli olarak finansal verilerin 
+yapılandırılması ve sorgulanabilir hale getirilmesi problemine odaklanmıştır; yani veriyi işleyip erişilebilir kılmayı 
+amaçlar (Choi et al., 2025). Choi et al.'ın sistemi, işlevsel olarak uzmanlaşmış ajanların ardışık bir iş akışında 
+çalıştığı bir mimariye sahipken, farklı felsefi bakış açılarının önceden filtrelenmiş adayları paralel olarak oyladığı 
+bir karar komitesi yapısına sahip değildir.   
+ 
+   
+Sonuç   
+ Bu literatür değerlendirmesi, mevcut araştırmaların çoklu ajan sistemlerini (MAS) finans alanında zaman serisi 
+tahmini, iş akışı optimizasyonu, portföy yönetimi, sistemik kriz simülasyonu, yasal uyum denetimi ve finansal 
+verilerin sorgulanması gibi çeşitli konularda nasıl kullandığını göstermektedir. Bu çalışmalar genellikle LLM 
+tabanlı ajanlar, geleneksel ajan modellemesi, spesifik algoritmalar (örn. YSA, Derin Öğrenme, SLP) veya farklı 
+karar mekanizmaları üzerine odaklanmaktadır. Bu çalışmanın amacı, mevcut bilgi birikimini bir adım ileri   
+taşıyarak, deterministik filtreleme ve skorlama yapan Üretici Ajanlar ile farklı yatırımcı felsefelerini temsil eden 
+LLM tabanlı Jüri Ajanlarını birleştiren özgün, hibrit bir çoklu ajan mimarisi aracılığıyla hisse senedi seçimi   
+problemine odaklanmaktır. Bu sistem, deterministik ajanların nicel gücü ile LLM jürinin nitel muhakemesini 
+birleştirerek, tekil yaklaşımlara kıyasla daha bütüncül bir yatırım destek çözümü sunmayı hedeflemektedir.    
+   
+ 
+Araştırma Önerisinin Özgün Değeri   
+ Çalışmamızın literatürdeki diğer çalışmalardan ayrılan özelliği, hisse senedi seçimi için hibrit bir mimari 
+sunmasıdır. Proje kapsamında geliştirilen sistem, iki katmanlı ve toplam altı ajandan oluşan bir mimari üzerine 
+kuruludur. Nicel filtreleme aşamasında, kural tabanlı bir yaklaşımla çalışan Üretici Ajanlar kullanılacaktır. Bu 
+ajanlar, hesaplama açısından verimli ve tekrarlanabilir sonuçlar üretir. Ancak, tek başlarına farklı yatırım 
+felsefelerinin nitel yönlerini yakalayamazlar.   
+  
+ Bu eksikliği gidermek amacıyla, ikinci katmanda yer alan Jüri Ajanları (Jüri A, Jüri B ve Jüri C), farklı yatırım 
+felsefelerini temsil ederek üretici ajanlardan gelen önerileri oylamaktadır. Jüri A (Değerleme Uzmanı) temel 
+finansal göstergelere, Jüri B (Büyüme Uzmanı) büyüme potansiyeline, Jüri C (Risk/Zamanlama Uzmanı) ise 
+volatilite ve maksimum kayıp gibi risk metriklerine odaklanmaktadır. Bu yapı sayesinde sistem, veri odaklı 
+analizleri çoklu bakış açılarıyla birleştirerek şeffaf, gerekçelendirilebilir ve adaptif bir karar süreci 
+geliştirmektedir.   
+  
+ Çalışmamızda temsil edilen yatırım felsefelerinin çeşitliliği, mevcut literatürdeki tekil modellere veya daha 
+homojen ajan yapılarına kıyasla daha zengin bir karar verme süreci sunmaktadır. Sonuç olarak, deterministik 
+filtrelemenin tek başına yetersiz kalabileceği noktada, farklı LLM tabanlı jüri ajanlarının paralel oylaması ile karar 
+kalitesi artırılmaktadır. Bu hibrit yapı ve paralel oylama mekanizması, sistemin verimliliğini korurken aynı 
+zamanda daha kapsamlı ve dengeli yatırım kararları üretmesini sağlamaktadır. Çalışma, hisse senedi seçimi için 
+özel olarak tasarlanmış; düşük seviyede deterministik verimlilik ile yüksek seviyede felsefi muhakemeyi 
+birleştiren hibrit ve paralel oylamalı bir çözüm sunmaktadır. Böylece, hem nicel analizin titizliğini hem de farklı 
+uzman görüşlerinin dengesini içeren, daha güvenilir bir yatırım kararı destek mekanizması oluşturulması 
+amaçlanmaktadır.   
+  
+ Araştırma kapsamında temel araştırma sorusu, “LLM tabanlı jüri ajanları ile deterministik faktör analizini 
+birleştiren hibrit çoklu ajan sistemi, geleneksel yöntemlere göre daha performanslı, açıklanabilir ve istikrarlı 
+yatırım kararları üretebilir mi?” şeklinde tanımlanmıştır. Bu soruya yanıt aramak üzere geliştirilen hipotezler şu 
+şekildedir: (H₁) Hibrit sistemin, yalnızca deterministik modellere kıyasla daha yüksek portföy performansı 
+(CAGR, Sharpe oranı) göstermesi beklenmektedir. (H₂) LLM tabanlı jüri katmanının, sistemin karar 
+açıklanabilirliğini ve tutarlılığını artıracağı öngörülmektedir. Bu hipotezlerin test edilmesi, önerilen mimarinin hem 
+finansal performans hem de karar kalitesi açısından geleneksel yaklaşımlara göre üstünlüğünü ortaya koymayı 
+amaçlamaktadır.   
+ 
+ 
+Projenin Ulusal Stratejik Hedeflerle İlişkilendirilmesi   
+ Bu proje, Türkiye Cumhuriyeti’nin 12. Kalkınma Planı (2024–2028) ve 2030 Sanayi ve Teknoloji Stratejisi 
+kapsamında tanımlanan Yapay Zekâ ve Büyük Veri Analitiği, Finansal Teknolojiler (FinTek) ve Akıllı Karar 
+Destek Sistemleri gibi kritik teknoloji alanlarıyla doğrudan ilişkilidir.   
+  
+ Proje, Büyük Dil Modellerini (LLM) karar verme çekirdeği olarak kullanarak karmaşık finansal verilerden anlamlı 
+içgörüler üretmekte ve ulusal stratejide vurgulanan yapay zekâ yetkinliklerinin geliştirilmesine katkı 
+sağlamaktadır. Aynı zamanda, çoklu ajan sistemi (MAS) mimarisi ile hisse senedi seçimi ve portföy yönetimi 
+===== PAGE 6 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 6 
+  
+ 
+süreçlerini optimize ederek Türkiye’nin FinTek alanındaki dijital dönüşüm ve uluslararası rekabet hedeflerini 
+desteklemektedir. Proje kapsamında geliştirilen Jüri Ajanları ve Topluluk Oylaması mekanizması, karar 
+süreçlerini şeffaf, gerekçelendirilebilir ve çoğulcu hâle getirerek finansal kurumlar için akıllı karar destek altyapısı 
+oluşturacaktır. Ayrıca, proje çıktılarıyla yerli yapay zekâ araştırmalarında hiyerarşik ve konsensüs tabanlı hibrit 
+modellerin kullanımına öncülük edilecektir. Özellikle Jüri C (Risk/Zamanlama Uzmanı) ajanının volatilite ve 
+maksimum kayıp gibi risk metriklerini karar sürecine entegre etmesi, finansal kuruluşların risk yönetimini daha 
+adaptif ve öngörülü hale getirecektir.   
+  
+ Sonuç olarak proje, yapay zekâ, finansal teknolojiler ve veri mühendisliği alanlarında ulusal stratejik önceliklerle 
+uyumlu, yenilikçi ve yerli bir çözüm önerisi sunarak Türkiye’nin FinTek ekosisteminde teknolojik kapasiteyi 
+güçlendirmeyi amaçlamaktadır.   
+ 
+ 
+ 
+1.2. Amaç ve Hedefler 
+    
+Araştırma önerisinin amacı ve hedefleri açık, ölçülebilir, gerçekçi ve ulaşılabilir nitelikte olacak şekilde yazılır. 
+ 
+ 
+AMAÇ:  
+Bu projenin temel amacı, hızla gelişen ve giderek karmaşıklaşan finansal teknolojiler (fintech) kapsamında, 
+yatırımcılar ve paydaşların karşılaştığı karar verme zorluklarına ve taraflar arasında bilgi eşitsizliğine etkin ve 
+yenilikçi bir çözüm üretmektir. Bu amaçla, firmaların hem sayısal performansını hem de yenilik ve gelişim 
+potansiyellerini analiz edebilen hibrit bir çoklu ajan (multi-agent) tabanlı yapay zeka modeli geliştirilecektir. Bu 
+modelde, sayısal verileri işleyen ve önceden tanımlanmış algoritmalar üzerinden karar veren üç adet 
+Deterministik Analist Ajan ile bu verileri yorumlayarak bir “jüri” görevi üstlenen üç adet Büyük Dil Modeli (LLM) 
+tabanlı Jüri Ajanı birlikte çalışacaktır.  
+ 
+Mevcut firma değerlendirme sistemlerinin iki temel sorunu vardır. Birincisi, sadece sayısal finansal verileri 
+dikkate alan otomatik sistemler, firmaların hizmet geliştirme kapasitesini ve stratejik vizyonunu göz ardı eder. 
+İkincisi, insan analist raporları ise yavaş, maliyetli, ölçeklenmesi zor ve öznel değerlendirmelere açıktır. Bu 
+çalışmada, deterministik ajanların matematiksel kesinliği ile LLM ajanlarının muhakeme ve yorumlama yeteneği 
+birleştirilerek, otonom, ölçeklenebilir ve derinlemesine analiz yapabilen bir karar destek sistemi geliştirilmesi 
+amaçlanmaktadır. Geliştirilecek sistem, yatırımcılara bir firmanın yalnızca mevcut finansal durumunu değil, aynı 
+zamanda gelecekteki potansiyelini, pazar uyumunu ve risklerini de gösteren, jüri ajanlarının konsensüsüne 
+dayalı öneri sunacaktır.  
+ 
+Sonuç olarak, bu proje hem teknik bir yenilik olarak hibrit ajan mimarisini sunmayı hem de finansal ekosistemin 
+şeffaflığını artırmayı hedeflemektedir. Böylece, potansiyeli yüksek ve güvenilir fintek firmalarının öne çıkması 
+desteklenecek, yatırım riskleri azaltılacak ve sektördeki kaynakların daha verimli yönlendirilmesi sağlanacaktır.  
+  
+  
+ 
+HEDEF:  
+Bu hedef kapsamında, deterministik Analist Ajanlar ile LLM tabanlı Jüri Ajanlarının birlikte çalışacağı hibrit çoklu 
+ajan mimarisi tasarlanacaktır. Sistem, veri akışı ve görev dağılımını kapsayacak şekilde planlanarak, finansal 
+verilerin analiz için uygun hâle getirilmesini sağlayacaktır.  
+ 
+Deterministik ve LLM tabanlı ajanların birlikte çalışmasıyla kolektif zekâ yaklaşımı finansal değerlendirme 
+modellerine entegre edilecektir. Farklı ajanların görüşleri bir araya getirilerek, daha dengeli, güvenilir ve 
+açıklanabilir değerlendirmeler elde edilecektir.  
+   
+Proje kapsamında geliştirilecek sistemin, yapılan test ve simülasyonlar sonucunda, seçilen 100 hissenin en az 
+75’inin altı aylık süreçte kâr getirmesi beklenmektedir. Bu sonuç, geliştirilen çoklu ajan modelinin yatırım 
+kararlarında doğru tahmin yapma ve sürdürülebilir kazanç sağlama kapasitesini gösterecektir.  
+ 
+Bu hedefe göre, Jüri Ajanlarından gelen veriler birleştirilerek, güvenilir ve açıklanabilir bir firma skoru üretecek 
+özgün bir oylama algoritması geliştirilecektir. Algoritma, sistemin ortak akıl yaklaşımını güçlendirecek ve 
+yatırımcıların daha doğru, tarafsız ve anlaşılır değerlendirmeler almasını sağlayacaktır.  
+ 
+Analiz süreçleri sonucunda oluşturulan firma değerlendirme ve öneri raporlarının, kullanıcıya e-posta aracılığıyla 
+otomatik olarak iletilmesini sağlayan bir bilgilendirme altyapısının geliştirilmesi planlanmaktadır. Bu sistem, 
+yatırımcıların yalnızca sonuçlara hızlı bir şekilde erişmesini değil, aynı zamanda önerilerin gerekçelerini ve 
+analiz sürecinin dayanaklarını detaylı biçimde inceleyebilmesini de mümkün kılacaktır.  
+ 
+ 
+===== PAGE 7 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 7 
+  
+ 
+ 
+ 
+2. YÖNTEM 
+ 
+Araştırmada uygulanacak yöntem ve araştırma tekniklerinin, amaç ve hedeflere ulaşmaya ne düzeyde elverişli 
+olduğu ilgili literatüre atıf yapılarak ortaya konulur.  
+ 
+Yöntem bölümünün; araştırma tasarımı, bağımlı ve bağımsız değişkenler, istatistiksel yöntemler vb. unsurları 
+içermesi gerekir. Araştırma önerisinde herhangi bir ön çalışma veya fizibilite yapıldıysa bunların sunulması 
+beklenir. Araştırma önerisinde sunulan yöntemlerin çalışma takvimi ile ilişkilendirilmesi gerekir. 
+ 
+Araştırmada kullanılacak yöntem, Borsa İstanbul pay piyasasında hisse senedi seçimi problemine yönelik, 
+deterministik (kural tabanlı) modüller ile Büyük Dil Modeli (LLM) tabanlı muhakeme modüllerini birleştiren hibrit 
+bir Çoklu Ajan Sisteminin geliştirilmesine dayanmaktadır. Bu hibrit mimari, projenin amaç ve hedeflerinde 
+tanımlanan iki temel beklentiye aynı anda hizmet eder: Sayısal olarak izlenebilir ve tekrarlanabilir bir karar süreci 
+oluşturmak ve bu süreci nitel, metin temelli ve felsefi değerlendirmelerle zenginleştirerek kolektif bir zekâ 
+yapısına dönüştürmek. 
+Metodoloji; araştırma tasarımı, sınırlı ama anlamlı bir değişken seti, beş aşamalı iş paketi kurgusu, istatistiksel 
+geçerleme stratejisi, fizibilite planı ve çalışma takvimi ile birlikte bütüncül bir yapı içinde ele alınmaktadır. 
+2.1. Araştırma Tasarımı ve Değişkenler 
+Çalışma, geriye dönük (retrospective) ve gözlemsel niteliktedir. Geliştirilecek sistem, BIST verileri üzerinde tam 
+otomatik çalışan bir Hibrit Karar Destek Sistemi olarak tasarlanmakta, insan müdahalesine ihtiyaç duymadan 
+veri toplama, filtreleme, değerlendirme ve strateji testi adımlarını bütünleşik biçimde yürütmektedir. 
+Araştırmanın evreni Borsa İstanbul pay piyasasıdır. Örneklem, sabit bir şirket listesi üzerinden değil, her 
+değerlendirme döneminde ilgili tarihte BIST-100 endeksine dahil olan ve asgari likidite kriterini sağlayan 
+şirketlerden dinamik olarak oluşturulmaktadır. Böylece, tarihsel kompozisyonu dikkate almayan ve yalnızca 
+hayatta kalmış şirketleri içeren örneklem kaynaklı yanlılıklar engellenmektedir. 
+Modelde kullanılan değişkenler, hocanızın uyarısı doğrultusunda sadeleştirilmiş ve üç temel yapı altında 
+toplanmıştır: 
+Birinci grup, Girdi Verileri’dir. Bunlar yalnızca üç ana kaynaktan elde edilir: tarihsel fiyat-hacim verileri, temel 
+finansal tablo verileri ve KAP üzerinden erişilen metin temelli açıklamalar. Bu veriler, sistem içinde alt kırılımlara 
+ayrılabilse de yöntemsel açıklamada ek değişken ismi üretilmemekte, sadece “fiyat ve hacim bilgisi”, “finansal 
+oranlar” ve “haber/açıklama içeriği” olarak ele alınmaktadır. 
+İkinci grup, Deterministik Bileşik Skorlar’dır. Tüm alt metrikler bu üç ana skor içinde toplanır ve başvuru metninde 
+yalnızca bu düzeyde ifade edilir: 
+(i) Temel Güç Skoru: Karlılık, bilanço yapısı ve nakit yaratma kapasitesini özetleyen bileşik bir puan. 
+(ii) Değerleme Skoru: Hissenin tarihsel ve sektörsel bağlamda görece ucuz/pahalı oluşunu özetleyen bileşik bir 
+puan. 
+(iii) Momentum-Risk Skoru: Fiyat eğilimi, oynaklık ve teknik görünümü bir arada değerlendiren bileşik bir puan. 
+Bu üç skor, istatistiksel detaylara girilmeden, İş Paketi 3 kapsamında hesaplanan ve Jüri Ajanları tarafından 
+okunan özet göstergeler olarak tanımlanır. 
+Üçüncü grup, Bağımlı Değişkenler’dir: Nihai Jüri Skoru (J) (0-1 aralığında sürekli bir çıktı), bu skora bağlı olarak 
+üretilen ikili karar (AL / ALMA) ve bu karar setinin geriye dönük uygulamasıyla elde edilen strateji performans 
+metrikleri (CAGR, Sharpe oranı vb.). Tüm istatistiksel analizler bu ana çıktı seti üzerinden yürütülecektir. 
+Bu yapı ile, metin içinde gereksiz sembol ve alt değişken üretiminden kaçınılarak, az sayıda fakat işlevsel bir 
+değişken seti korunmuştur. 
+2.2. Araştırma Süreci ve İş Paketleri 
+Metodoloji, mantıksal olarak birbirini izleyen beş iş paketi üzerinden yürütülmektedir. İş paketleri, başvuru 
+formatına uygun olarak “İş Paketi 1, 2, 3, 4, 5” başlıkları ile ve paragraflar halinde yapılandırılmıştır. 
+===== PAGE 8 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 8 
+  
+ 
+İş Paketi 1: Aday Havuzu Ajanı 
+Bu aşamada geliştirilecek deterministik ajan, her tarih için o günün gerçek BIST-100 bileşenlerini ve asgari 
+likidite kriterini sağlayan payları dikkate alarak dinamik bir aday havuzu oluşturur. Böylece hayatta kalma 
+yanlılığı önlenir, analiz edilen evren her dönem için tarihsel olarak doğru bir bileşim taşır. Bu iş paketinin çıktısı, 
+bir sonraki aşamanın tek girdi kümesidir. 
+İş Paketi 2: Keşifçi Ajan (Veri Toplama ve Özellik Deposu) 
+İş Paketi 2’de, Aday Havuzu için gerekli fiyat, hacim, temel finansal oranlar ve KAP açıklamaları belirlenmiş veri 
+kaynaklarından otomatik olarak çekilir ve temizlenir. Buradaki temel ilke, geleceği görme yanlılığını 
+engellemektir. Bu amaçla her veri, kendi ilan veya oluşum tarihi ile etiketlenir ve yalnızca o tarih itibarıyla 
+bilinebilecek bilgi kullanılır. Tüm veriler daha sonra analiz ve testlerde kullanılmak üzere yeniden üretilebilir bir 
+Özellik Deposu’nda saklanır. 
+İş Paketi 3: Üretici-Filtreleyici Ajan 
+Bu aşamada, İş Paketi 2’den gelen veriler kullanılarak sadeleştirilmiş üç bileşik skor üretilir: Temel Güç Skoru, 
+Değerleme Skoru ve Momentum-Risk Skoru. Sektörel farklılıkların etkisini azaltmak için bu skorlar sektör içi 
+bağlamda normalize edilir. Ardından, zayıf finansal yapıya sahip şirketler elenir ve kalan adaylar bu üç skorun 
+dengeli bir birleşimine göre sıralanır. İş Paketi 3’ün çıktısı, Jüri değerlendirmesine gönderilecek sınırlı sayıda 
+adaydan oluşan bir liste (örneğin yaklaşık 10 hisse) olup, takip eden aşamada LLM tabanlı ajanların hesaplama 
+yükünü azaltır. 
+İş Paketi 4: Jüri Ajanları ve Konsensüs Mekanizması 
+İş Paketi 4’te, Top-10 aday listesi, üç farklı bakış açısını temsil eden LLM tabanlı jüri ajanlarına sunulur. Birinci 
+jüri ajanı, Temel Güç Skoruna ve büyüme potansiyeline odaklanarak şirketin sürdürülebilir niteliğini sorgular. 
+İkinci jüri ajanı, Değerleme Skorunu esas alarak güvenlik marjı ve makul fiyatlama açısından değerlendirme 
+yapar. Üçüncü jüri ajanı ise Momentum-Risk Skorunu temel alarak piyasa zamanlaması ve risk görünümünü 
+dikkate alır. Her ajan, adaylara 0 ile 1 arasında bir puan verir; bu puanların ortalaması Nihai Jüri Skoru (J) olarak 
+tanımlanır. Belirli bir eşik değerin üzerinde J skoru alan hisseler için AL sinyali üretilir. Bu aşamada kullanılan 
+modeller ölçeklenebilir olacak şekilde tasarlanacak, prototipte ticari bir model, devamında ise açık kaynak bir 
+model tercih edilecektir. 
+İş Paketi 5: Sistem Doğrulaması ve Performans Analizi 
+Son iş paketinde, hibrit sistemin ürettiği AL sinyallerinin tarihsel veriler üzerinde ne ölçüde değer ürettiği 
+incelenir. Bu amaçla 2018–2024 dönemi için, işlem maliyetlerini içeren geriye dönük testler ve Walk-Forward 
+doğrulama yaklaşımı kullanılır. Elde edilen performans, BIST-100 eşit ağırlık gibi uygun bir kıyas ölçütü ile 
+karşılaştırılır. Böylece sistemin rastlantısal veya aşırı uyumlu değil, istatistiksel olarak tutarlı bir alfa üretip 
+üretmediği değerlendirilir. 
+2.3. İstatistiksel Yöntemler ve Geçerleme 
+İstatistiksel yapı, sade tutulmuş değişken seti ile uyumludur. İş Paketi 3’te kullanılan normalizasyon teknikleri, 
+şirketler arası karşılaştırılabilirliği artırmak amacı taşır. İş Paketi 5’te Walk-Forward doğrulama kullanılarak, 
+model parametrelerinin sadece geçmiş veri üzerinde değil, görmediği dönemler üzerinde de tutarlı performans 
+gösterip göstermediği test edilir. Strateji çıktıları; bileşik getiri, dalgalanma ve düşüş riskini birlikte dikkate alan 
+standart performans göstergeleri ile değerlendirilir. Stratejinin kıyas ölçütüne göre ürettiği ek getiri (alfa), basit 
+fakat yorumlanabilir bir çerçevede, örneğin ortalama aylık getiriler üzerinden uygulanan t-testi ile istatistiksel 
+olarak sınanır. Bu bölümde ek değişken türetilmemekte, yalnızca ana skorlar ve ana çıktıların anlamlılığı test 
+edilmektedir. 
+2.4. Ön Çalışma / Fizibilite 
+Tam ölçekli uygulamaya geçmeden önce yöntem, daha dar bir kapsamda sınanacaktır. BIST-30 evreni ve sınırlı 
+bir tarih aralığı üzerinde, İş Paketi 2, 3 ve 4 birlikte çalıştırılarak veri akışı, API bağlantıları, bileşik skor üretimi ve 
+Jüri entegrasyonu uçtan uca test edilir. Bu ön uygulama, altyapı ve entegrasyon sorunlarını erken aşamada 
+tespit etmeye ve hibrit mimarinin teknik olarak uygulanabilir olduğunu göstermeye yöneliktir. 
+===== PAGE 9 =====
+2209-A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEKLEME PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 9 
+  
+ 
+2.5. Çalışma Takvimi ile İlişki 
+Yöntem, proje süresi ile doğrudan uyumlu olacak şekilde fazlara ayrılmıştır. İlk iki ayda İş Paketi 1 ve 2 ile 
+dinamik evren, veri toplama yapısı ve Özellik Deposu kurulacaktır. Üçüncü ve dördüncü aylarda İş Paketi 3 
+kapsamında bileşik skorlar ve filtreleme mekanizması tamamlanacaktır. Beşinci ila yedinci aylar arasında İş 
+Paketi 4 kapsamında Jüri ajanları ve konsensüs mekanizması geliştirilecek ve hibrit mimari çalışır hale 
+getirilecektir. Sekizinci ve dokuzuncu aylarda İş Paketi 5 ile geriye dönük testler yürütülecek, sonuçlar analiz 
+edilecek ve nihai rapor hazırlanacaktır. 
+2.6. Yöntemin Amaç ve Literatürle Uyumlu Oluşu 
+Önerilen yöntem, literatürdeki tamamen LLM veya tamamen kurallı sistemlere kıyasla aradaki boşluğu hedefli 
+biçimde doldurmaktadır. Deterministik katman, veri bütünlüğünü, sayısal tutarlılığı ve yeniden üretilebilirliği 
+güvence altına alırken; Jüri katmanı, metin temelli açıklamalar ve çok boyutlu değerlendirmeleri sisteme dahil 
+ederek nitel zekâ boyutunu kazandırır. Tek modele veya tek ajana bağlı karar yapılarının oluşturduğu “tek hata 
+noktası” riski azaltılır; farklı bakış açılarının paralel ve bağımsız değerlendirmesi ile daha dengeli bir karar 
+mekanizması elde edilir. Böylece seçilen yöntem, hem proje amaçlarıyla hem de güncel çoklu ajan ve hibrit 
+sistem literatürü ile uyumlu, sade fakat güçlü bir metodolojik çerçeve sunar. 
+ 
+===== PAGE 10 =====
+2209/A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEĞİ PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 10 
+  
+ 
+3.  PROJE YÖNETİMİ  
+ 
+3.1 Çalışma Takvimi 
+ 
+Araştırmada yer alacak başlıca faaliyetler, her bir faaliyetin hangi sürede gerçekleştirileceği, başarı ölçütü ve 
+araştırmanın başarısına katkısı “Çalışma Takvimi” doldurularak sunulur.  
+ 
+ÇALIŞMA TAKVİMİ (*) 
+         
+Tarih Aralığı 
+ 
+Faaliyetler** Kim(ler) Tarafından 
+Gerçekleştirileceği  
+Başarı Ölçütü ve 
+Araştırmanın 
+Başarısına Katkısı***  
+01/12/2025- 
+31/12/2025 
+İP-1: Aday Havuzu 
+Ajanı (Dinamik 
+Evren Belirleme)  
+Borsa İstanbul pay 
+piyasasında, her 
+dönem için tarihsel 
+BIST-100 bileşenleri 
+ve likidite kriterlerine 
+göre dinamik bir 
+şirket evreninin 
+oluşturulması.  
+ 
+Vedat Ali Tatlı, Rabia Yeşil, 
+Gizem Coşkun 
+BIST-100 bazlı veri 
+evreni oluşturulmuş, 
+eksik veri oranı <%2; 
+analiz edilebilir liste 
+hazır (Katkı %10)  
+01/01/2026-
+28/02/2026 
+İP-2: Veri Toplama 
+(ETL) ve Feature 
+Store Kurulumu  
+Finnhub ve KAP API 
+bağlantılarının 
+entegrasyonu, 
+dönemsel verilerin 
+çekilmesi ve Parquet 
+tabanlı 
+versiyonlanabilir 
+Feature Store 
+yapısının 
+oluşturulması.  
+Vedat Ali Tatlı, Rabia Yeşil, 
+Gizem Coşkun 
+ 
+ETL akışı günlük batch 
+olarak otomatikleşmiş; 
+Feature Store’dan sorgu 
+süresi ≤300 ms (Katkı 
+%15)  
+01/03/2026-
+30/04/2026 
+İP-3: Faktör 
+Hesaplama ve 
+Normalizasyon  
+S_val, S_moat, 
+S_basic, S_tech 
+değişkenlerinin 
+sektör-içi Z-skor ile 
+normalize edilmesi.  
+Vedat Ali Tatlı, Rabia Yeşil, 
+Gizem Coşkun 
+ 
+Tüm faktörlerin 
+hesaplanmış olması; 
+faktör korelasyon raporu 
+tamamlanmış (Katkı 
+%15)  
+01/05/2026-
+31/05/2026 
+İP-3: Filtreleme ve 
+Ön Eleme  
+Top-100 → Top-10 
+daraltma, istatistiksel 
+testlerle model 
+sağlamlık analizi.  
+ 
+Vedat Ali Tatlı, Rabia Yeşil, 
+Gizem Coşkun 
+ 
+Filtre sonrası eksik veri 
+oranı <%1; Top-10 listesi 
+belirlenmiş (Katkı %5)  
+===== PAGE 11 =====
+2209/A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEĞİ PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 11 
+  
+ 
+01/05/2026-
+31/08/2026 
+İP-4: Konsensüs ve 
+Raporlama Modülü  
+Top-10 içinden Top-3 
+seçimi; puanlama ve 
+kısa açıklamalı özet 
+raporun 
+oluşturulması.  
+ 
+Vedat Ali Tatlı, Rabia Yeşil, 
+Gizem Coşkun 
+ 
+Top-3 listesi otomatik 
+üretiliyor; özet rapor 
+şablonu (mail + detay 
+linki) tamamlanmış 
+(Katkı %30)  
+01/08/2026-
+31/10/2026 
+İP-5: Sistem 
+Doğrulaması (Walk-
+Forward Backtest)  
+2018–2024 BIST 
+verisiyle test, 
+performans 
+karşılaştırması.  
+ 
+Vedat Ali Tatlı, Rabia Yeşil, 
+Gizem Coşkun 
+ 
+AGR, Sharpe, Sortino, 
+MDD metrikleri 
+hesaplanmış; 
+benchmark 
+karşılaştırması 
+tamamlanmış (Katkı 
+%15) 
+01/11/2026-
+30/11/2026 
+Sonuç Analizi, 
+Raporlama ve 
+Model Geçişi  
+Performans özet 
+raporu, Llama 3 70B 
+geçiş planı, final 
+belgelendirme.  
+ 
+Vedat Ali Tatlı, Rabia Yeşil, 
+Gizem Coşkun 
+ 
+Nihai rapor 
+tamamlanmış; hedef 
+metrikler ≥ CAGR %15, 
+Sharpe> 1.2; açık 
+kaynak kod deposu 
+oluşturulmuş (Katkı 
+%10)  
+ 
+(*) Çizelgedeki satırlar ve sütunlar gerektiği kadar genişletilebilir ve çoğaltılabilir. 
+(**) Literatür taraması, sonuç raporu hazırlama aşamaları, araştırma sonuçlarının paylaşımı, ve malzeme 
+alımı ayrı birer iş adımı olarak gösterilmemelidir. 
+(***) Başarı ölçütü, ölçülebilir ve izlenebilir nitelikte olacak şekilde nicel veya nitel ölçütlerle (ifade, sayı, 
+yüzde, vb.) belirtilir. Bu sütundaki değerlerin toplamı 100 olmalıdır. 
+ 
+ 
+3.2 Risk Yönetimi 
+   Araştırmanın başarısını olumsuz yönde etkileyebilecek riskler ve bu risklerle karşılaşıldığında araştırmanın 
+başarıyla yürütülmesini sağlamak için alınacak tedbirler (B Planı) aşağıdaki Risk Yönetimi Tablosu’nda ifade 
+edilir. B Plan(lar)ının uygulanması araştırmanın temel hedeflerinden sapmaya yol açmamalıdır. B 
+Plan(lar)ına geçilmesi durumunda yöntem değişikliğine gidiliyor ise bu durum detaylandırılmalıdır. 
+ 
+                                                       RİSK YÖNETİMİ TABLOSU* 
+En Önemli Riskler Alınacak Tedbirler (B Planı) 
+ 
+ 
+ 
+ 
+LLM (Yapay Zekâ) Jüri Ajanlarının 
+Tutarsızlığı (LLM ajanları İP-4'te 
+"halüsinasyon" görür veya çelişkili muhakeme 
+yürütürse) 
+Eğer Jüri Ajanları tutarsız muhakeme yürütürse:  
+ 
+(i) İlk olarak, ajanlara verilen görev şablonları 
+(prompting) daha kısıtlayıcı hale getirilerek 
+sıkılaştırılacaktır.  
+ 
+(ii) Hata devam ederse, prototipleme modeli (GPT-4 
+Turbo) ile açık kaynaklı alternatif (Llama-3 70B) yer 
+değiştirilerek A/B testi yapılacaktır.  
+ 
+(iii) Son çare olarak, konsensüs algoritmasındaki 
+(aritmetik ortalama) ağırlıklar değiştirilerek, örneğin 
+'Değer' (Jüri B) veya 'Kalite' (Jüri A) ajanlarının 
+oylarına daha fazla ağırlık verilecektir.  
+ 
+ 
+Veri Kaynağı Kısıtlamaları veya Erişim 
+Sorunları (Finnhub API kotası dolar veya KAP 
+RSS akışı kalıcı olarak kısıtlanırsa 
+API kotası veya KAP akışında kalıcı bir kesinti 
+yaşanırsa:  
+ 
+(i) Proje, verileri bir 'Özellik Deposu'nda (cache) 
+saklayacak şekilde tasarlandığından, kısa süreli 
+kesintiler tolere edilebilecektir.  
+ 
+(ii) Finnhub erişimi kalıcı olarak kaybedilirse, 
+===== PAGE 12 =====
+2209/A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEĞİ PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 12 
+  
+ 
+alternatif ücretsiz API kaynakları araştırılıp entegre 
+edilecektir.  
+ 
+(iii) KAP RSS akışı durursa, B planı olarak KAP web 
+sitesinin arşivinden veri çekme (scraping) metodu 
+devreye alınacaktır.  
+ 
+ 
+ 
+ 
+Bilimsel Geçerliliğin İhlali (Look-ahead Bias 
+- Geleceği Görme Hatası) (İP-5'teki testin, bir 
+yazılım hatası nedeniyle gelecekteki veriyi 
+"görerek" hileli sonuç üretmesi)  
+Testlerde 'gelecekten bilgi sızıntısı' (hile) tespit 
+edilirse:  
+ 
+(i) Metodolojinin 'açıklanma tarihi' (as-of-date) kuralı 
+bu riski engellemek için tasarlanmıştır.  
+ 
+(ii) Bu kuralı doğrulamak için, geriye dönük test 
+(backtest) koduna otomatik yazılım testleri (birim 
+testleri) eklenecektir.  
+ 
+(iii) Bu testler, her simülasyon gününde kullanılan 
+verinin, o gün itibarıyla 'bilinebilir' olduğunu kontrol 
+edecektir. Hatalı bir veri akışı (pipeline) tespit 
+edilirse düzeltilecektir.  
+ 
+ 
+ 
+Stratejinin Geçmiş Veriyi Ezberlemesi (Aşırı 
+Uyum- Overfitting) (Modelin 2018-2024 
+verilerinde mükemmel çalışıp, gerçek 
+gelecekte başarısız olacağının sinyallerini 
+vermesi)  
+Modelin geçmiş veriyi ezberlediği (overfitting) tespit 
+edilirse:  
+ 
+(i) 'Walk-Forward Optimizasyon' metodolojisi bu riski 
+azaltmak için seçilmiştir.  
+ 
+(ii) Aşırı uyum devam ederse, modelin karmaşıklığı 
+azaltılacaktır.  
+ 
+(iii) Örneğin, İP-3'teki deterministik ajan tarafından 
+kullanılan faktör (özellik) sayısı düşürülecek veya 
+konsensüs mekanizması (İP-4) basit bir aritmetik 
+ortalama olarak sabit tutulacaktır.  
+ 
+ 
+ 
+ 
+Performans Hedeflerine Ulaşılamaması (İP-
+5'teki test sonuçlarının, belirlenen hedeflerin 
+(örn: CAGR <%15) altında kalması)  
+Nihai strateji, hedeflenen performans metriklerine 
+ulaşamazsa:  
+ 
+(i) Jüri felsefelerinin (Kalite, Değer, Risk) ağırlıkları 
+üzerinde duyarlılık analizi yapılacaktır. (Örn: 
+"Risk/Zamanlama" ajanının (Jüri C) oylarının ağırlığı 
+düşürülebilir).  
+ 
+(ii) "AL" sinyali için belirlenen baraj skor (0.75) 0.70-
+0.80 aralığında yeniden kalibre edilecektir.  
+ 
+(iii) Simülasyonda kullanılan işlem maliyetlerinin 
+(%0,1 + 20 bps) sonuçlar üzerindeki etkisi 
+incelenerek farklı senaryolar test edilecektir.  
+   (*) Tablodaki satırlar gerektiği kadar genişletilebilir ve çoğaltılabilir. 
+ 
+ 
+3.3.Araştırma Olanakları 
+Bu bölümde projenin yürütüleceği kurum ve kuruluşlarda var olan ve projede kullanılacak olan altyapı/ekipman 
+(laboratuvar, araç, makine-teçhizat, vb.) olanakları belirtilir. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+===== PAGE 13 =====
+2209/A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEĞİ PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 13 
+  
+ 
+ 
+ARAŞTIRMA OLANAKLARI TABLOSU 
+ Kuruluşta Bulunan Altyapı/Ekipman 
+Türü, Modeli 
+(Laboratuvar, Araç, Makine-Teçhizat, vb.) 
+Projede Kullanım Amacı 
+Python 3.11+ Geliştirme Ekosistemi 
+(Pandas, NumPy, LangGraph, CrewAI, 
+Backtrader)  
+Deterministik ajan, veri işleme ve hibrit 
+ajan orkestrasyonunun geliştirilmesi.  
+Yüksek VRAM GPU Sistemi (NVIDIA 
+RTX 4070/4080 veya Üniversite 
+Sunucusu GPU)  
+İP-4 Jüri Ajanları aşamasında LLM 
+modellerinin (GPT-4 Turbo API / Llama 
+3 70B) çalıştırılması ve inference 
+testlerinin yapılması.  
+ (*) Tablodaki satırlar gerektiği kadar genişletilebilir ve çoğaltılabilir. 
+ 
+4. ARAŞTIRMA ÖNERİSİNİN YAYGIN ETKİSİ 
+ 
+      Araştırma önerisi kapsamındaki çalışmadan elde edilmesi öngörülen çıktılar amaçlarına göre belirlenen 
+kategorilere ayrılarak belirtilir; ölçülebilir ve gerçekçi hedeflere dayandırılır.  
+ 
+Çıktı, Etki ve Kazanımlar Öngörülen Çıktı(lar), Etki(ler) ve Kazanım(lar) 
+Bilimsel/Akademik Çıktılar 
+(Ulusal/Uluslararası Makale, Kitap Bölümü, 
+Kitap, Bildiri vb.) 
+- 1 adet uluslararası veya ulusal bildiri: “Finansal Karar 
+Destek Sistemlerinde Hibrit Çoklu Ajan Mimarisi” başlıklı 
+çalışma.  
+ 
+- 1 adet akademik makale / teknik rapor: LLM + 
+deterministik hibrit model performans analizi.  
+ 
+- Açık kaynaklı yazılım ve veri sözlüğü (GitHub deposu) 
+paylaşımı, ileride yapılacak akademik replikasyonlara 
+referans oluşturacaktır.  
+ 
+Ekonomik/Ticari/Sosyal Çıktılar 
+(Ürün, Prototip, Patent, Faydalı Model, Tescil, 
+Görsel/İşitsel Arşiv, Envanter/Veri Tabanı, 
+Çalıştay, Eğitim, Bilimsel Etkinlik vb.) 
+- Prototip Karar Destek Yazılımı: Kullanıcıya e-posta 
+üzerinden Top-3 hisse önerisi, puan ve açıklama raporu 
+sunan web tabanlı sistem.  
+ 
+- FinTek Ar-Ge katkısı: Yerli FinTek girişimlerinin 
+yatırım algoritmalarına entegre edilebilecek açık API 
+mimarisi.  
+ 
+- Eğitim etkisi: Üniversite-sanayi iş birliğinde veri bilimi 
+ve finansal analiz alanında öğrenci uygulama altyapısı 
+.  
+- Sosyal etki: Bireysel yatırımcıların finansal 
+okuryazarlığını artıran, açıklanabilir yapay zekâ temelli 
+karar sistemi.  
+ 
+ 
+Yeni Proje(ler) Oluşturmasına Yönelik 
+Çıktılar 
+(Ulusal/Uluslararası Yeni Proje vb.) 
+- TÜBİTAK 1507 / 1512 veya BİGG FinTek ticarileştirme 
+projesi başvurusu için ön prototip altyapısı.  
+ 
+- Yüksek lisans tezi veya TÜBİTAK 2209-B projesine 
+genişletilebilir akademik temel.  
+ 
+- LLM modellerinin Türkçe finansal veriyle yeniden 
+eğitilmesine yönelik “LLM Fine-Tuning for Borsa 
+İstanbul Data” adlı devam projesi planlanmaktadır.  
+ 
+ 
+ 
+===== PAGE 14 =====
+2209/A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEĞİ PROGRAMI 
+ARAŞTIRMA ÖNERİSİ FORMU 
+ 
+ 
+ 14 
+  
+ 
+ 
+5. BELİRTMEK İSTEDİĞİNİZ DİĞER KONULAR 
+Sadece araştırma önerisinin değerlendirilmesine katkı sağlayabilecek bilgi/veri (grafik, tablo, vb.) eklenebilir.  
+ 
+ 
+ 
+  
+ 
+6. EKLER 
+ 
+Yu, Y., Yao, Z., Li, H., Deng, Z., Jiang, Y., Cao, Y., ... & Xie, Q. (2024). Fincon: A synthesized LLM multi-agent 
+system with conceptual verbal reinforcement for enhanced financial decision making. Advances in Neural 
+Information Processing Systems, 37, 137010–137045.  
+  
+Li, Y., Yu, Y., Li, H., Chen, Z., & Khashanah, K. (2023). TradingGPT: Multi-agent system with layered memory 
+and distinct characters for enhanced financial trading performance. arXiv preprint arXiv:2309.03736.  
+  
+Nguyen, T. D., Pham, L. H., & Sun, J. (2025). AUTOLAW: Enhancing legal compliance in large language models 
+via case law generation and jury-inspired deliberation. arXiv preprint arXiv:2505.14015.  
+  
+Yıldız, A. (2022). Finans alanında yapay zekâ teknolojisinin kullanımı: Sistematik literatür incelemesi. Pamukkale 
+Üniversitesi Sosyal Bilimler Enstitüsü Dergisi, (52), 47–66.  
+  
+Raudys, Š., & Zliobaite, I. (2006, June). The multi-agent system for prediction of financial time series. In 
+International Conference on Artificial Intelligence and Soft Computing (pp. 653–662). Berlin, Heidelberg: Springer 
+Berlin Heidelberg.  
+  
+Demirtaş, Ş. C., & Şahin, S. Ç. (2023). Ajan bazlı finansal modelleme ve uygulama prosedürü. Politik Ekonomik 
+Kuram, 7(2), 201–214.  
+  
+Pandey, V., Ng, W. K., & Lim, E. P. (2000, September). Financial advisor agent in a multi-agent financial trading 
+system. In Proceedings of the 11th International Workshop on Database and Expert Systems Applications (pp. 
+482–486). IEEE.  
+  
+Choi, C., Lopez-Lira, A., Lee, Y., Kwon, J., Kim, M., Hwang, J., ... & Kim, J. (2025). Structuring the 
+unstructured: A multi-agent system for extracting and querying financial KPIs and guidance. arXiv preprint 
+arXiv:2505.19197.  
+  
+Dodnikov, R. (2024). Workflow optimization in finance using multi-agent systems. Innovative Information 
+Technologies for Economy Digitalization (IITED), (1), 182–188.  
+ 

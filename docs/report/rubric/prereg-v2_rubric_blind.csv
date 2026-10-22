@@ -1,0 +1,159 @@
+id,payload_summary,rationale,score,groundedness,clarity,consistency
+R01,"sector group: manufacturing | size: large | statement: stale | dimension: momentum_risk
+adv_6m_tl: z=2.01 pct=97
+mdd_6m: z=1.99 pct=100
+momentum_12_1: z=0.86 pct=76
+vol_6m: z=1.3 pct=100","The stock exhibits excellent momentum (76th percentile) and superior risk characteristics, ranking in the top tier for volatility control (100th percentile), drawdown resilience (100th percentile), and liquidity (97th percentile). However, the stale statement introduces uncertainty regarding current fundamentals, which slightly dampens confidence despite the robust historical metrics.",0.9,,,
+R02,"sector group: manufacturing | size: mid | statement: recent | dimension: valuation
+book_to_market: z=0.54 pct=64
+earnings_yield: z=-0.08 pct=36
+ebitda_yield: z=2.82 pct=92
+fcf_yield: z=1.73 pct=92","The company exhibits a compelling margin of safety driven by exceptionally high EBITDA and free cash flow yields (both in the 92nd percentile), indicating it is significantly cheaper on an operational and cash-generation basis than peers. However, this attractive pricing appears partially offset by a weaker earnings yield (36th percentile) and a book-to-market ratio that is only moderately cheap (64th percentile). The divergence between the strong cash-flow multiples and the lower earnings multiple suggests the market may be discounting future earnings quality or growth prospects despite the current low valuation.",0.75,,,
+R03,"sector group: manufacturing | size: large | statement: stale | dimension: valuation
+book_to_market: z=0.03 pct=55
+earnings_yield: z=2.44 pct=100
+ebitda_yield: z=2.3 pct=94
+fcf_yield: z=3.0 pct=100","The company exhibits a compelling margin of safety, as earnings yield (100th percentile), EBITDA yield (94th percentile), and free cash flow yield (100th percentile) all rank at or near the top of the peer group. Although the book-to-market metric is neutral (55th percentile), the consensus across multiple income and cash-flow based valuation measures suggests the stock is significantly undervalued relative to peers. This attractive pricing must be viewed with caution due to the stale financial statement, which introduces uncertainty regarding the current relevance of these robust z-scores.",0.9,,,
+R04,"sector group: non financials | size: mid | statement: recent | dimension: fundamental
+gross_margin: z=-0.84 pct=25
+operating_margin: z=0.32 pct=75
+profit_growth: z=0.67 pct=80
+revenue_growth: z=2.43 pct=100
+roic: z=0.03 pct=62","While the company demonstrates exceptional revenue expansion and strong operating leverage, its low gross margin percentile suggests a vulnerability in core pricing power or cost structure that offsets some of the growth benefits. The average return on capital further indicates that this high growth has not yet translated into superior capital efficiency compared to peers. Consequently, the balance between aggressive top-line growth and underlying profitability quality is mixed.",0.65,,,
+R05,"sector group: manufacturing | size: small | statement: stale | dimension: momentum_risk
+adv_6m_tl: z=-0.73 pct=15
+mdd_6m: z=-0.63 pct=31
+momentum_12_1: z=3.0 pct=95
+vol_6m: z=-0.16 pct=46","The stock exhibits exceptional trend strength with a momentum percentile of 95, indicating robust upward pressure. However, this is counterbalanced by poor tradability (15th percentile) and a stale statement, which introduces uncertainty regarding the current liquidity environment. The low volatility is a positive factor, but the combination of extreme momentum and thin liquidity creates a fragile setup prone to sharp reversals.",0.4,,,
+R06,"sector group: manufacturing | size: small | statement: recent | dimension: valuation
+book_to_market: z=-0.03 pct=47
+earnings_yield: z=1.92 pct=100
+ebitda_yield: z=2.3 pct=94
+fcf_yield: z=-3.0 pct=6","The company exhibits a strong earnings yield (100th percentile) and an excellent EBITDA yield (94th percentile), suggesting it is priced very cheaply relative to peers. However, this attractive pricing is contradicted by a poor free cash flow yield (6th percentile) and a book-to-market ratio near the median (47th percentile), indicating that the low valuation may be justified by weak cash generation rather than being a genuine bargain.",0.4,,,
+R07,"sector group: non financials | size: large | statement: recent | dimension: momentum_risk
+adv_6m_tl: z=3.0 pct=100
+mdd_6m: z=0.2 pct=78
+momentum_12_1: z=2.15 pct=100
+vol_6m: z=0.06 pct=67","The stock exhibits exceptional momentum (100th percentile) and superior tradability with the highest advance ratio (100th percentile), indicating strong upward trend strength and deep liquidity. Volatility and drawdown metrics are also robust, ranking in the top tier of the peer group, which supports a favorable risk/timing profile for holding.",0.95,,,
+R08,"sector group: non financials | size: large | statement: recent | dimension: valuation
+book_to_market: z=1.08 pct=82
+earnings_yield: z=0.36 pct=64
+ebitda_yield: z=-0.01 pct=60
+fcf_yield: z=0.9 pct=91","The company exhibits a very strong free cash flow yield (91st percentile) and an attractive book-to-market ratio (82nd percentile), suggesting it is priced cheaply relative to peers. However, the earnings yield is only in the 64th percentile, which indicates that while cash flows are robust, current earnings do not offer as significant a discount as the other metrics suggest. The near-neutral EBITDA yield z-score (-0.01) further supports the view that valuation is driven primarily by cash flow and book value rather than operating income or market price compression.",0.85,,,
+R09,"sector group: manufacturing | size: mid | statement: recent | dimension: valuation
+book_to_market: z=3.0 pct=100
+earnings_yield: z=2.92 pct=100
+ebitda_yield: z=3.0 pct=100
+fcf_yield: z=-0.67 pct=23","The company exhibits exceptional value across earnings yield, book-to-market, and EBITDA yield, all ranking at the 100th percentile with robust positive z-scores. However, this attractive pricing is partially offset by a significantly weaker free cash flow yield, which sits at the 23rd percentile with a negative z-score. This divergence suggests the low valuation may be driven by cash flow constraints rather than pure undervaluation, requiring caution despite the strong multiple compression.",0.75,,,
+R10,"sector group: technology | size: large | statement: recent | dimension: fundamental
+gross_margin: z=0.33 pct=86
+operating_margin: z=0.67 pct=86
+profit_growth: z=-0.28 pct=50
+revenue_growth: z=-0.32 pct=29
+roic: z=0.69 pct=100","While this company demonstrates exceptional capital efficiency and profitability with a perfect ROIC percentile and high operating margins, its growth metrics lag behind the peer average as indicated by negative z-scores for revenue and profit growth. This divergence suggests that current superior returns may be driven by market share consolidation or cost advantages rather than scalable top-line expansion, creating a risk to future sustainability.",0.75,,,
+R11,"sector group: manufacturing | size: mid | statement: recent | dimension: valuation
+book_to_market: z=-0.22 pct=39
+earnings_yield: z=1.43 pct=86
+ebitda_yield: z=0.55 pct=75
+fcf_yield: z=0.09 pct=56","The company demonstrates a strong margin of safety with an earnings yield percentile of 86 and an EBITDA yield percentile of 75, indicating it is significantly cheaper than its manufacturing peers. However, the book-to-market metric shows a weakness at the 39th percentile, suggesting that while cash-flow based valuations are attractive, the asset base may be undervalued or the market perceives specific balance sheet risks. The convergence of high earnings and EBITDA yields supports an attractive pricing thesis, despite the lower book value relative to peers.",0.85,,,
+R12,"sector group: construction reit | size: large | statement: recent | dimension: fundamental
+gross_margin: z=2.39 pct=100
+operating_margin: z=0.02 pct=80
+profit_growth: z=2.01 pct=75
+revenue_growth: z=0.0 pct=60
+roic: z=0.76 pct=100","This company demonstrates exceptional capital efficiency and pricing power with top-tier ROIC and gross margins, but its revenue growth is only average relative to peers. The strong profit growth suggests effective cost management or leverage, yet the lack of standout revenue expansion limits the durability of this high-quality profile. Consequently, while profitability is elite, the overall growth trajectory is not exceptional enough to warrant a perfect score.",0.85,,,
+R13,"sector group: retail | size: small | statement: recent | dimension: fundamental
+gross_margin: z=-0.3 pct=43
+operating_margin: z=0.0 pct=57
+profit_growth: z=3.0 pct=83
+revenue_growth: z=3.0 pct=100
+roic: z=3.0 pct=100","This company demonstrates exceptional capital efficiency and growth consistency, ranking in the top tier for both Return on Capital and revenue expansion. However, the below-average gross margin percentile suggests that its high profitability is not driven by superior pricing power or cost control relative to peers, which introduces a risk to the durability of its operating model. While the recent statement confirms current relevance, the reliance on growth over margin quality prevents this from being rated as exceptional overall.",0.75,,,
+R14,"sector group: manufacturing | size: small | statement: recent | dimension: fundamental
+gross_margin: z=-0.69 pct=31
+operating_margin: z=0.02 pct=56
+profit_growth: z=-0.84 pct=14
+revenue_growth: z=-0.67 pct=25
+roic: z=0.42 pct=72","While the company demonstrates exceptional capital efficiency (roic_pct) and decent operating leverage (operating_margin_pct), these strengths are undermined by clear weaknesses in gross margins (gross_margin_z) and declining revenue and profit growth trajectories (revenue_growth_z, profit_growth_z). The inability to grow top-line or bottom-line relative to peers suggests the high returns on capital may not be sustainable without addressing fundamental expansion issues. Consequently, the overall quality and growth profile is compromised by these broad-based growth deficiencies.",0.4,,,
+R15,"sector group: holdings | size: mid | statement: stale | dimension: valuation
+book_to_market: z=1.6 pct=86
+earnings_yield: z=3.0 pct=100
+ebitda_yield: z=3.0 pct=100
+fcf_yield: z=-3.0 pct=7","The company exhibits extremely strong earnings and EBITDA yields (100th percentile), indicating it is priced significantly cheaper than peers. However, this attractive valuation is contradicted by a very poor free cash flow yield (7th percentile) and the fact that the financial statement is stale, suggesting potential underlying liquidity or quality issues.",0.6,,,
+R16,"sector group: retail | size: small | statement: recent | dimension: fundamental
+gross_margin: z=3.0 pct=100
+operating_margin: z=3.0 pct=100
+profit_growth: z=3.0 pct=86
+revenue_growth: z=3.0 pct=100
+roic: z=1.19 pct=71","This company demonstrates exceptional fundamental quality, achieving the highest possible percentile ranks for operating margins, gross margins, and revenue growth within its retail peer group. The robust z-scores confirm that these strengths are statistically significant outliers rather than anomalies, suggesting a highly sustainable competitive advantage. While the small size tercile introduces potential scalability constraints, the breadth of top-tier performance across profitability and growth dimensions supports an exceptional rating.",1.0,,,
+R17,"sector group: manufacturing | size: large | statement: recent | dimension: momentum_risk
+adv_6m_tl: z=2.79 pct=97
+mdd_6m: z=-0.61 pct=32
+momentum_12_1: z=-0.58 pct=32
+vol_6m: z=-0.13 pct=46","The stock exhibits excellent tradability with an advanced liquidity percentile of 97, ensuring robust execution capabilities. However, the momentum z-score of -0.58 and percentile rank of 32 indicate weak price strength relative to peers, while volatility remains near average at the 46th percentile. This combination of low trend strength despite high liquidity suggests a fragile setup that does not currently favor holding over the next month.",0.35,,,
+R18,"sector group: retail | size: small | statement: recent | dimension: fundamental
+gross_margin: z=3.0 pct=100
+operating_margin: z=1.01 pct=100
+profit_growth: z=0.09 pct=67
+revenue_growth: z=2.25 pct=100
+roic: z=1.4 pct=100","This company demonstrates exceptional operating quality and sustainable growth, evidenced by its top-tier performance in ROIC, margins, and revenue expansion. However, the profit growth metric trails slightly behind the others at the 67th percentile, suggesting that while top-line momentum is strong, bottom-line efficiency or cost control might face headwinds relative to peers. Given the small size tercile, these perfect scores are notable but warrant a slight deduction from a perfect score to account for potential data noise.",0.9,,,
+R19,"sector group: manufacturing | size: large | statement: recent | dimension: valuation
+book_to_market: z=0.15 pct=59
+earnings_yield: z=1.76 pct=95
+ebitda_yield: z=3.0 pct=95
+fcf_yield: z=3.0 pct=95","The company exhibits a compelling margin of safety, as earnings yield, EBITDA yield, and free cash flow yield all rank in the 95th percentile with robust positive z-scores. Although the book-to-market metric is only moderately attractive at the 59th percentile, the strong agreement across multiple income and cash-flow based valuation measures confirms that the stock is genuinely undervalued rather than cheap for a reason.",0.95,,,
+R20,"sector group: holdings | size: large | statement: recent | dimension: valuation
+book_to_market: z=2.22 pct=100
+earnings_yield: z=1.7 pct=100
+ebitda_yield: z=0.44 pct=71
+fcf_yield: z=1.71 pct=100","The company exhibits a compelling margin of safety, as earnings yield, book-to-market, and free cash flow yield all rank at the 100th percentile, indicating it is significantly cheaper than peers. Although the EBITDA yield is lower (71st percentile), the strong agreement among three distinct valuation metrics confirms that the low price is not due to a specific fundamental flaw but rather reflects genuine undervaluation relative to the sector.",1.0,,,
+R21,"sector group: manufacturing | size: mid | statement: recent | dimension: momentum_risk
+adv_6m_tl: z=0.56 pct=71
+mdd_6m: z=0.77 pct=85
+momentum_12_1: z=2.83 pct=97
+vol_6m: z=-0.97 pct=24","The stock exhibits exceptional trend strength with a momentum_12_1_z of 2.83 and a top-tier momentum_12_1_pct of 97, while maintaining robust downside protection evidenced by an mdd_6m_z of 0.77. However, the vol_6m_z score of -0.97 indicates that volatility is significantly higher than the peer average, which introduces friction for a holding period focused on timing stability. Despite this elevated volatility, the strong momentum and shallow drawdown profile suggest the risk-reward balance remains favorable for a one-month horizon.",0.85,,,
+R22,"sector group: manufacturing | size: mid | statement: recent | dimension: momentum_risk
+adv_6m_tl: z=2.06 pct=100
+mdd_6m: z=-0.86 pct=18
+momentum_12_1: z=0.47 pct=67
+vol_6m: z=-0.43 pct=33","The stock exhibits exceptional tradability with a perfect liquidity percentile (100), yet it suffers from below-average momentum (67) and elevated volatility (33). Additionally, the shallow drawdown metric is weak at the 18th percentile, indicating significant downside risk relative to peers. These conflicting signals of strong liquidity but poor risk control suggest a fragile setup that does not favor holding over the next month.",0.4,,,
+R23,"sector group: manufacturing | size: mid | statement: stale | dimension: momentum_risk
+adv_6m_tl: z=1.73 pct=86
+mdd_6m: z=0.28 pct=63
+momentum_12_1: z=1.97 pct=94
+vol_6m: z=-2.16 pct=20","The stock exhibits exceptional momentum (94th percentile) and strong tradability (86th percentile), but this is counterbalanced by extreme volatility indicated by a z-score of -2.16. Additionally, the stale statement introduces uncertainty regarding the current validity of these risk metrics.",0.55,,,
+R24,"sector group: manufacturing | size: mid | statement: recent | dimension: fundamental
+gross_margin: z=0.0 pct=55
+operating_margin: z=0.68 pct=81
+profit_growth: z=2.04 pct=95
+revenue_growth: z=0.31 pct=58
+roic: z=0.19 pct=55","This company demonstrates exceptional profitability with a profit growth rank of 95 and strong operating margins at the 81st percentile, indicating high-quality earnings generation. However, the average gross margin (55th percentile) and moderate returns on capital suggest that this superior profit growth is not yet fully supported by broad-based pricing power or capital efficiency across all dimensions. Consequently, while the growth trajectory is outstanding, the overall operating quality is constrained by these specific weaknesses.",0.7,,,
+R25,"sector group: technology | size: large | statement: recent | dimension: valuation
+book_to_market: z=0.16 pct=80
+earnings_yield: z=1.45 pct=100
+ebitda_yield: z=2.28 pct=100
+fcf_yield: z=3.0 pct=100","The company exhibits a compelling margin of safety, as all three primary valuation metrics—earnings yield, EBITDA yield, and free cash flow yield—achieve the maximum percentile rank of 100. This unanimous agreement across distinct earnings and cash-flow measures indicates that the stock is priced significantly cheaper than its technology sector peers for no apparent reason. The robust z-scores further confirm that these attractive valuations are statistically significant outliers rather than anomalies.",1.0,,,
+R26,"sector group: manufacturing | size: large | statement: recent | dimension: momentum_risk
+adv_6m_tl: z=2.08 pct=91
+mdd_6m: z=1.96 pct=100
+momentum_12_1: z=0.82 pct=86
+vol_6m: z=0.81 pct=86","The stock exhibits strong momentum (86th percentile) and superior risk-adjusted stability, evidenced by a high volatility z-score of 0.81 and an exceptional maximum drawdown z-score of 1.96 indicating shallow losses. Additionally, the advanced liquidity metric ranks in the 91st percentile, ensuring robust tradability without slippage concerns.",0.95,,,
+R27,"sector group: non financials | size: large | statement: recent | dimension: momentum_risk
+adv_6m_tl: z=1.18 pct=79
+mdd_6m: z=0.28 pct=71
+momentum_12_1: z=0.71 pct=79
+vol_6m: z=-0.13 pct=50","The stock exhibits strong momentum at the 79th percentile and superior liquidity with a z-score of 1.18, indicating robust tradability. Volatility is neutral relative to peers while drawdown resilience remains above average, creating a favorable risk-adjusted profile for holding.",0.85,,,
+R28,"sector group: manufacturing | size: large | statement: recent | dimension: valuation
+book_to_market: z=0.07 pct=56
+earnings_yield: z=0.33 pct=69
+ebitda_yield: z=0.45 pct=72
+fcf_yield: z=0.44 pct=71","The company demonstrates a consistent valuation advantage across earnings, EBITDA, and free cash flow yields, with all percentile ranks significantly above the median (69th, 72nd, and 71st respectively). This convergence of multiple cheapness metrics suggests the low price is not due to fundamental distress but rather represents a genuine margin of safety relative to its manufacturing peers.",0.9,,,
+R29,"sector group: manufacturing | size: large | statement: recent | dimension: valuation
+book_to_market: z=0.43 pct=67
+earnings_yield: z=3.0 pct=100
+ebitda_yield: z=2.92 pct=94
+fcf_yield: z=3.0 pct=100","The company exhibits a compelling margin of safety, as earnings yield, EBITDA yield, and free cash flow yield all rank at the top of their peer groups (100th percentile), indicating it is significantly cheaper than comparable manufacturers. Although the book-to-market metric is only moderately attractive (67th percentile), the strong agreement across multiple cash-flow and earnings-based valuation measures confirms that this pricing is not due to fundamental distress but rather genuine undervaluation.",1.0,,,
+R30,"sector group: manufacturing | size: large | statement: recent | dimension: momentum_risk
+adv_6m_tl: z=-0.25 pct=42
+mdd_6m: z=2.27 pct=100
+momentum_12_1: z=3.0 pct=97
+vol_6m: z=0.18 pct=71","The stock exhibits exceptional trend strength with a momentum_12_1_z of 3.0 and a top-tier momentum_12_1_pct of 97, while maintaining superior drawdown resilience (mdd_6m_pct: 100). However, the tradability metric adv_6m_tl_z is negative (-0.25) with a percentile rank of 42, indicating relatively thin liquidity compared to peers which poses a risk for larger position adjustments.",0.85,,,

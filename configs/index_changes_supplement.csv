@@ -1,0 +1,17 @@
+year,quarter,announcement_date,index_code,action,ticker,company,source_url
+2020,1,2019-12-17,XU050,include,AEFES,ANADOLU EFES,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,include,AGHOL,AG ANADOLU GRUBU HOLDING,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,include,ANACM,ANADOLU CAM,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,include,ENKAI,ENKA INSAAT,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,include,HEKTS,HEKTAS,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,exclude,AKSEN,AKSA ENERJI,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,exclude,GLYHO,GLOBAL YATIRIM HOLDING,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,exclude,IHLAS,IHLAS HOLDING,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,exclude,POLHO,POLISAN HOLDING,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,exclude,VERUS,VERUSA HOLDING,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,substitute,TRGYO,TORUNLAR GMYO,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,substitute,ECILC,ECZACIBASI ILAC,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU050,substitute,ISDMR,ISKENDERUN DEMIR CELIK,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU030,substitute,MGROS,MIGROS,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU030,substitute,TRKCM,TRAKYA CAM,https://www.kap.org.tr/tr/Bildirim/803975
+2020,1,2019-12-17,XU030,substitute,ENJSA,ENERJISA ENERJI,https://www.kap.org.tr/tr/Bildirim/803975

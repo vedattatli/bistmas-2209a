@@ -1,0 +1,5 @@
+# prereg-v2 overlay: BISTMAS_CONFIG=configs/prereg_v2.toml
+# The amended specification (docs/preregistration_v2.md) builds and reads its own store, so the prereg-v1
+# vintages in data/store stay byte-identical for the as-registered (secondary) analysis.
+[paths]
+store = "data/store_v2"

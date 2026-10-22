@@ -1,0 +1,5 @@
+ticker,event,effective_date,source,note,index_code
+KIPA,exit,2018-09-03,hand,merged into MGROS; last trade 2018-08-31,
+ENJSA,entry,2018-02-08,hand,2018 IPO fast-track entry (rule 7.5),XU100
+GUSGR,rename,2020-10-19,hand,renamed TURSG; membership continues under new code,
+CRFSA,exit,,hand,mid-period exit; date to confirm,

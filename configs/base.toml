@@ -1,0 +1,85 @@
+# bistmas base configuration. Override locally with configs/local.toml (gitignored).
+# All parameters that affect results are here so that runs are reproducible from config + code + data vintage.
+
+[project]
+name = "bistmas"
+timezone = "Europe/Istanbul"
+
+[paths]
+data = "data"          # relative to repo root
+raw = "data/raw"
+store = "data/store"
+runs = "data/runs"
+
+[universe]
+provider = "official"          # official | rule_based
+index = "XU100"
+min_months_listed = 12
+min_adv_tl_6m = 5_000_000      # 6-month average daily traded value floor (TL, nominal; revisited per year in M1)
+one_class_per_issuer = true
+validation_window_end = "2025-12-31"  # official-list validations after this date do not gate the build (forward-run events)
+
+[rebalance]
+frequency = "monthly"
+first_decision = "2017-12-29"  # last session of Dec-2017 -> first holding month Jan-2018
+last_decision = "2024-11-29"   # last session of Nov-2024 -> last holding month Dec-2024
+decision_cutoff_time = "18:00"  # information available up to this local time on the decision day
+execution = "next_session_vwap"
+
+[scoring]
+sector_group_min_size = 5
+zscore_method = "median_mad"
+zscore_clip = 3.0
+composite_weights = { fundamental = 1.0, valuation = 1.0, momentum_risk = 1.0 }
+top_n_screen = 10
+min_listed_sessions = 250
+adv_percentile_floor = 0.10     # liquidity floor = max(universe.min_adv_tl_6m, 10th percentile of the month's members' 6m ADV)
+max_statement_age_days = 400
+
+[jury]
+model = "qwen3.5:9b"
+model_digest = "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"              # pinned after the first pull (bistmas doctor prints it)
+host = "http://127.0.0.1:11434"
+num_ctx = 8192
+num_predict = 700
+temperature = 0.0
+seed = 20260923
+think = false                  # Qwen3.5 thinking mode off: 35 vs 459 output tokens, 7 s vs 30 s per call
+prompt_version = "v2"
+theta = 0.75                   # pre-registered BUY threshold (secondary metric)
+max_validation_retries = 1
+min_votes = 2                  # candidates with fewer valid agent scores get J = NaN (kept in the table)
+agents = ["quality_growth", "value", "risk_timing"]
+
+[audit]
+robustness_months = 6          # H2 robustness audit (off unless `bistmas audit --robustness`): months re-scored
+robustness_noise_z = 0.25      # uniform +-0.25 noise on every payload z-score (percentiles are left as they are)
+robustness_top_k = 3
+robustness_seed = 20260923
+robustness_paraphrase_version = "v2_paraphrase"
+rubric_n = 30                  # H2 human blind rubric: number of rationales
+rubric_seed = 20260923
+
+[backtest]
+top_n = [3, 5, 10]
+headline_top_n = 3
+cost_bps_commission = 10       # 0.1 %
+cost_bps_slippage = 20
+cost_sensitivity_bps = [0, 30, 60, 100]
+haircut_sensitivity = 0.20     # pre-registered rerun with this haircut on involuntary exits
+delisting_haircut = 0.0        # sensitivity switch: 0.20 for involuntary exits
+rf_source = "tcmb_policy_rate"
+random_jury_seeds = 500
+theta_step = 0.05              # BUY-only sensitivity theta +- step (secondary)
+newey_west_lags = 3
+
+[forward]
+enabled = false
+email_to = ""
+smtp_host = "smtp.gmail.com"
+smtp_port = 587
+
+[macro]
+cpi_series = "TP.FG.J0"                              # TÜİK CPI 2003=100 (EVDS); no observations after 2026-01
+cpi_continuation_series = "TP.TUKFIY2025.GENEL"       # 2025=100 successor, spliced with the overlap ratio ("" = off)
+cpi_stale_days = 60                                   # cpi_pit becomes NaN once the latest print is older than this

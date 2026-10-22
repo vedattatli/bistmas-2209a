@@ -1,0 +1,139 @@
+PERIODIC INDEX CHANGES FOR THE PERIOD OCTOBER 1, 2024-DECEMBER 3                                                        1, 202  4
+
+
+ BIST 30 INDEX
+
+ STOCKS TO BE INCLUDED                           STOCKS TO BE EXCLUDED                      SUBSTITUTE STOCKS
+ 1  MGROS       MIGROS TICARET                    1  BRSAN       BORUSAN BORU               1   MIATK      MIA TEKNOLOJI
+                                                                 SANAYI
+ 2  TTKOM       TURK TELEKOM                      2  GUBRF       GUBRE FABRIK.              2   AEFES      ANADOLU EFES
+ 3  ULKER       ULKER BISKUVI                     3  OYAKC       OYAK CIMENTO               3   TAVHL      TAV
+                                                                                                           HAVALIMANLARI
+
+
+
+ BIST 50 INDEX
+
+ STOCKS TO BE INCLUDED                           STOCKS TO BE EXCLUDED                      SUBSTITUTE STOCKS
+ 1  CCOLA       COCA COLA ICECEK                  1  CWENE       CW ENERJI                  1   KOZAA      KOZA MADENCILIK
+ 2  KCAER       KOCAER CELIK                      2  EUPWR       EUROPOWER ENERJI           2   MAVI       MAVI GIYIM
+ 3  REEDR       REEDER TEKNOLOJI                  3  GESAN       GIRISIM ELEKTRIK           3   BERA       BERA HOLDING
+                                                                 SANAYI
+ 4  VAKBN       VAKIFLAR BANKASI                  4  SMRTG       SMART GUNES ENERJISI
+                                                                 TEK.
+
+
+
+ BIST 100 INDEX
+
+ STOCKS TO BE INCLUDED                           STOCKS TO BE EXCLUDED                      SUBSTITUTE STOCKS
+  1   ADEL      ADEL KALEMCILIK                   1    BFREN      BOSCH FREN                1   CVKMD      CVK MADEN
+                                                                  SISTEMLERI
+  2   ALTNY     ALTINAY SAVUNMA                   2    ECZYT      ECZACIBASI YATIRIM        2   ENTRA      IC ENTERRA YEN.
+                                                                                                           ENERJI
+  3   ANSGR     ANADOLU SIGORTA                   3    EUREN      EUROPEN ENDUSTRI          3   ANHYT      ANADOLU HAYAT
+                                                                                                           EMEK.
+  4   BJKAS     BESIKTAS FUTBOL YAT.              4    ISGYO      IS GMYO
+
+  5   CLEBI     CELEBI                            5    IZENR      IZDEMIR ENERJI
+  6   FENER     FENERBAHCE FUTBOL                 6    KAYSE      KAYSERI SEKER
+                                                                  FABRIKASI
+  7   KARSN     KARSAN OTOMOTIV                   7    QUAGR      QUA GRANITE HAYAL
+                                                                  YAPI
+  8   MPARK     MLP SAGLIK                        8    SDTTR      SDT UZAY VE
+                                                                  SAVUNMA
+  9   PAPIL     PAPILON SAVUNMA                   9    TKNSA      TEKNOSA IC VE DIS
+                                                                  TICARET
+ 10   RGYAS     RONESANS GAYRIMENKUL              10   YYLGD      YAYLA GIDA
+                YAT.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                              1 / 2
+
+
+PERIODIC INDEX CHANGES FOR THE PERIOD OCTOBER 1, 2024-DECEMBER 3                                                         1, 202  4
+
+
+ BIST 500 INDEX
+
+ STOCKS TO BE INCLUDED                            STOCKS TO BE EXCLUDED                      SUBSTITUTE STOCKS
+  1   AHSGY       AHES GMYO                        1   AGYO        ATAKULE GMYO              1   MEPET      METRO PETROL VE
+                                                                                                            TESISLERI
+  2   ALKLC       ALTINKILIC GIDA VE SUT           2   ATAGY       ATA GMYO                  2   TDGYO      TREND GMYO
+  3   CEMZY       CEM ZEYTIN                       3   AVGYO       AVRASYA GMYO              3   RODRG      RODRIGO TEKSTIL
+  4   DCTTR       DCT TRADING DIS TICARET          4   DOGUB       DOGUSAN
+  5   EFORC       EFOR CAY SANAYI                  5   DURDO       DURAN DOGAN
+                                                                   BASIM
+  6   EUHOL       EURO YATIRIM HOLDING             6   GLBMD       GLOBAL MEN. DEG.
+  7   GARFA       GARANTI FAKTORING                7   MEPET       METRO PETROL VE
+                                                                   TESISLERI
+  8   ONRYT       ONUR TEKNOLOJI                   8   MSGYO       MISTRAL GMYO
+  9   OZATD       OZATA DENIZCILIK                 9   MZHLD       MAZHAR ZORLU
+                                                                   HOLDING
+ 10   OZYSR       OZYASAR TEL                     10   PAGYO       PANORA GMYO
+ 11   SEGMN       SEGMEN KARDESLER GIDA           11   RODRG       RODRIGO TEKSTIL
+ 12   SELGD       SELCUK GIDA                     12   TDGYO       TREND GMYO
+ 13   TCKRC       KIRAC GALVANIZ                  13   VANGD       VANET GIDA
+ 14   UFUK        UFUK YATIRIM                    14   VKING       VIKING KAGIT
+
+
+
+ BIST LIQUID BANKS INDEX
+
+ STOCKS TO BE INCLUDED                                                STOCKS TO BE EXCLUDED
+  --  -----            -----                                            1   SKBNK            SEKERBANK
+                                                                        2   TSKB             T.S.K.B.
+
+
+
+ BIST LIQUID 10 EX BANKS INDEX
+
+ STOCKS TO BE INCLUDED                            STOCKS TO BE EXCLUDED                       SUBSTITUTE STOCKS
+ 1  KOZAL         KOZA ALTIN                       1  SAHOL       SABANCI HOLDING              1  SAHOL       SABANCI
+                                                                                                              HOLDING
+                                                                                               2  PETKM       PETKIM
+                                                                                               3  BIMAS       BIM MAGAZALAR
+
+
+
+ BIST SUSTAINABILITY INDEX
+
+ STOCKS TO BE INCLUDED                                                STOCKS TO BE EXCLUDED
+  1   ISGYO               IS GMYO                                      --   -----            -----
+  2   NUHCM               NUH CIMENTO
+
+
+
+ BIST SUSTAINABILITY 25 INDEX
+
+ STOCKS TO BE INCLUDED                            STOCKS TO BE EXCLUDED                      SUBSTITUTE STOCKS
+  1   EREGL       EREGLI DEMIR CELIK               1   TKFEN       TEKFEN HOLDING            1   AGHOL      ANADOLU GRUBU
+                                                                                                            HOLDING
+  2   TUPRS       TUPRAS                           2   TSKB        T.S.K.B.                  2   AKSA       AKSA
+                                                                                             3   TKFEN      TEKFEN HOLDING
+
+
+
+                                                               2 / 2
+

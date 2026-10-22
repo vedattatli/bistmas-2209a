@@ -1,0 +1,30 @@
+# Data (raw pulls, feature store, run outputs) are never committed
+data/raw/
+data/store/
+data/runs/
+data/store_*
+data/raw_*
+!data/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# Secrets and local settings
+.env
+configs/local.toml
+*.secret
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Claude Code local state
+.claude/

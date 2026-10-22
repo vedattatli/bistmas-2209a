@@ -1,0 +1,8 @@
+# Forward (paper-trading) configuration overlay: BISTMAS_CONFIG=configs/forward.toml
+# Uses its own store AND its own price raw layer so the frozen backtest vintages (data/store, data/raw/isyatirim)
+# are never rebuilt or overwritten. data/raw_forward/<source> are symlinks to data/raw/<source> except
+# isyatirim/, which holds fresh full re-pulls (the adjusted price history is restated after every corporate
+# action, so forward runs re-pull instead of appending).
+[paths]
+raw = "data/raw_forward"
+store = "data/store_forward"

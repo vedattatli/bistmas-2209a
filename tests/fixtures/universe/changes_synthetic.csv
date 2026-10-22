@@ -1,0 +1,9 @@
+year,quarter,announcement_date,index_code,action,ticker,company,source_url
+2017,3,2017-06-20,XU100,include,KIPA,KIPA TICARET,https://example.test/2017q3
+2018,1,2017-12-18,XU100,include,EEEE,COMPANY E,https://example.test/2018q1
+2018,1,2017-12-18,XU100,exclude,CCCC,COMPANY C,https://example.test/2018q1
+2018,1,2017-12-18,XU100,substitute,SSSS,SUBSTITUTE S,https://example.test/2018q1
+2018,1,2017-12-18,XU030,include,EEEE,COMPANY E,https://example.test/2018q1
+2018,1,2017-12-18,XU030,exclude,BBBB,COMPANY B,https://example.test/2018q1
+2018,4,2018-09-20,XU100,exclude,HURGZ,HURRIYET GAZETECILIK,https://example.test/2018q4
+2020,1,2019-12-20,XU100,include,AAAA,COMPANY A,https://example.test/2020q1

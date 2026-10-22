@@ -1,0 +1,85 @@
+# XBRL concept map per statement template. Each alias lists candidate concepts in priority order;
+# the first one present in a filing is used. Flow items come from the income statement / cash flow
+# (YTD columns), stock items from the balance sheet (period-end columns).
+# Bank and insurer maps are placeholders until the first KAP bank/insurer bodies are inspected (M3 job).
+
+[industrial.flows]
+# "a+b" = sum of the concepts present (at least one). Holdings that consolidate a bank report Revenue (commercial)
+# separately from RevenueFromFinanceSectorOperations, while GrossProfit/operating profit cover both scopes.
+revenue = ["ifrs-full_Revenue+kap-fr_RevenueFromFinanceSectorOperations"]
+gross_profit = ["ifrs-full_GrossProfit", "kap-fr_GrossProfitLossFromCommercialOperations"]
+operating_profit = ["ifrs-full_ProfitLossFromOperatingActivities"]
+ebit = ["kap-fr_ProfitLossBeforeFinancingExpense", "ifrs-full_ProfitLossFromOperatingActivities"]
+pretax_profit = ["ifrs-full_ProfitLossBeforeTax"]
+tax = ["ifrs-full_IncomeTaxExpenseContinuingOperations"]
+net_profit = ["ifrs-full_ProfitLoss", "ifrs-full_ProfitLossFromContinuingOperations"]
+net_profit_parent = ["ifrs-full_ProfitLossAttributableToOwnersOfParent", "ifrs-full_ProfitLoss"]
+depreciation = ["ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense"]
+interest_expense = ["ifrs-full_AdjustmentsForInterestExpense", "ifrs-full_FinanceCosts"]
+cfo = ["ifrs-full_CashFlowsFromUsedInOperatingActivities"]
+capex = ["kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities", "ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities"]
+
+[industrial.stocks]
+cash = ["ifrs-full_CashAndCashEquivalents"]
+st_investments = ["kap-fr_CurrentFinancialInvestments"]
+st_debt = ["kap-fr_CurrentBorowings", "kap-fr_CurrentBorrowings", "ifrs-full_ShorttermBorrowings"]
+st_debt_ltportion = ["kap-fr_CurrentPortionOfNoncurrentBorrowings"]
+lt_debt = ["ifrs-full_LongtermBorrowings"]
+equity = ["ifrs-full_Equity"]
+equity_parent = ["ifrs-full_EquityAttributableToOwnersOfParent", "ifrs-full_Equity"]
+assets = ["ifrs-full_Assets"]
+current_assets = ["ifrs-full_CurrentAssets"]
+current_liabilities = ["ifrs-full_CurrentLiabilities"]
+liabilities = ["ifrs-full_Liabilities"]
+
+[bank.flows]
+net_profit = ["ifrs-full_ProfitLoss", "ifrs-full_ProfitLossFromContinuingOperations"]
+net_profit_parent = ["ifrs-full_ProfitLossAttributableToOwnersOfParent", "ifrs-full_ProfitLoss"]
+pretax_profit = ["ifrs-full_ProfitLossBeforeTax"]
+net_interest_income = ["kap-fr_InterestIncomeOrExpense", "kap-fr_ProfitShareIncomeOrExpense"]
+net_fee_income = ["kap-fr_FeeAndCommissionIncomeOrExpenses"]
+# from 2018 personnel costs are a separate line; before that they sit inside OtherOperatingExpenses
+operating_expenses = ["kap-fr_OtherOperatingExpenses+kap-fr_PersonnelExpenses"]
+gross_operating_profit = ["kap-fr_GrossProfitLossFromOperatingActivitiesForBankingSector"]
+operating_profit = ["ifrs-full_ProfitLossFromOperatingActivities"]
+
+[bank.stocks]
+equity = ["ifrs-full_Equity"]
+equity_parent = ["ifrs-full_EquityAttributableToOwnersOfParent", "ifrs-full_Equity"]
+assets = ["ifrs-full_Assets"]
+loans = ["kap-fr_Loans"]
+deposits = ["kap-fr_Deposits", "kap-fr_FundsCollected"]
+
+[insurer.flows]
+net_profit = ["ifrs-full_ProfitLoss", "ifrs-full_ProfitLossFromContinuingOperations"]
+net_profit_parent = ["ifrs-full_ProfitLossAttributableToOwnersOfParent", "ifrs-full_ProfitLoss"]
+pretax_profit = ["ifrs-full_ProfitLossBeforeTax"]
+
+[insurer.stocks]
+equity = ["ifrs-full_Equity"]
+equity_parent = ["ifrs-full_EquityAttributableToOwnersOfParent", "ifrs-full_Equity"]
+assets = ["ifrs-full_Assets"]
+
+[other_financial.flows]
+net_profit = ["ifrs-full_ProfitLoss"]
+net_profit_parent = ["ifrs-full_ProfitLossAttributableToOwnersOfParent", "ifrs-full_ProfitLoss"]
+
+[other_financial.stocks]
+equity = ["ifrs-full_Equity"]
+equity_parent = ["ifrs-full_EquityAttributableToOwnersOfParent", "ifrs-full_Equity"]
+assets = ["ifrs-full_Assets"]
+
+[picks]
+# aliases where a reported 0 is treated as missing when a later candidate is non-zero (solo/simple filings)
+zero_as_missing = ["net_profit_parent", "equity_parent"]
+# aliases whose legs may carry opposite signs depending on the concept picked; the magnitude is used
+abs_aliases = ["interest_expense"]
+
+[tax]
+# statutory corporate tax rate by year (used for ROIC when the effective rate is unusable)
+statutory = { 2017 = 0.20, 2018 = 0.22, 2019 = 0.22, 2020 = 0.22, 2021 = 0.25, 2022 = 0.23, 2023 = 0.25, 2024 = 0.25, 2025 = 0.25, 2026 = 0.25 }
+
+[basis]
+# statements for period ends on/after this date are TMS-29 inflation-adjusted (non-financial issuers)
+tms29_from = "2023-12-31"
+tms29_exempt_templates = ["bank", "insurer", "other_financial"]

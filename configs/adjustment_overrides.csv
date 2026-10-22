@@ -1,0 +1,2 @@
+ticker,ex_date,correct_factor_step,source,note
+LRSHO,2019-09-17,1.5,"vendor raw file isyatirim/LRSHO/2019.json.gz; capital 60m -> 90m (1.5x bonus)","vendor HGDG_KAPANIS steps +67.6% (factor ratio 2.5616) although a 1.5x bonus allows at most 1.5; raw close falls 6.80 -> 4.45 (-1.8% after the bonus)"

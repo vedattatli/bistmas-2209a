@@ -1,0 +1,13 @@
+{
+  "totalCount": 7,
+  "items": [
+    {"Tarih": "2017-9", "TP_FG_J0": "319.02", "UNIXTIME": {"$numberLong": "1504224000"}},
+    {"Tarih": "2017-10", "TP_FG_J0": "325.51", "UNIXTIME": {"$numberLong": "1506816000"}},
+    {"Tarih": "2017-11", "TP_FG_J0": "330.46", "UNIXTIME": {"$numberLong": "1509494400"}},
+    {"Tarih": "2017-12", "TP_FG_J0": "331.10", "UNIXTIME": {"$numberLong": "1512086400"}},
+    {"Tarih": "2018-1", "TP_FG_J0": "334.44", "UNIXTIME": {"$numberLong": "1514764800"}},
+    {"Tarih": "2018-2", "TP_FG_J0": "336.88", "UNIXTIME": {"$numberLong": "1517443200"}},
+    {"Tarih": "2018-3", "TP_FG_J0": "340.24", "UNIXTIME": {"$numberLong": "1519862400"}},
+    {"Tarih": "2018-4", "TP_FG_J0": null, "UNIXTIME": {"$numberLong": "1522540800"}}
+  ]
+}
