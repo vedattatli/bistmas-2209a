@@ -16,6 +16,28 @@
 | Proje başlangıç ve bitiş tarihleri | 01.12.2025 – 30.10.2026 |
 | Proje ekibi | Vedat Ali Tatlı, Gizem Coşkun, Rabia Yeşil |
 
+## Özet
+
+Bu projede Borsa İstanbul'un BIST-100 evreninde her ay az sayıda hisse seçen ve her seçimi gerekçelendiren, kural
+tabanlı ajanlarla büyük dil modeli (LLM) ajanlarını birleştiren hibrit bir çoklu ajan sistemi geliştirilmiştir.
+Sistemin ilk katmanında deterministik ajanlar, hayatta kalma yanlılığından arındırılmış endeks üyeliği ve yalnızca
+kamuya açıklandığı tarihten sonra kullanılan finansal verilerle hisseleri tarar, filtreler ve temel güç, değerleme
+ve momentum-risk skorlarına göre her ay 10 aday belirler. İkinci katmanda kalite/büyüme, değer ve risk/zamanlama
+bakış açılarını temsil eden üç LLM jüri ajanı (yerel Qwen3.5 9B modeli), şirket adı, kod ve tarih gizlenmiş
+göstergelerle adayları bağımsız olarak puanlar ve gerekçelendirir; puanların ortalaması aylık üç hisselik öneriyi
+belirler. Sistem 2018–2024 döneminde (84 ay) işlem maliyetleri dâhil, önceden kaydedilmiş bir test düzeniyle
+sınanmıştır. Hibrit Top-3 portföyü yıllık %35,0 (TL) getiri sağlamış, kural tabanlı Top-3'ün (%40,8) ve eşit
+ağırlıklı BIST-100 ölçütünün (%44,1) gerisinde kalmıştır; aylık fark (−%0,43; t = −0,56) anlamlı değildir ve jüri
+seçimi 500 rastgele jüriden ayırt edilememiştir. Bu nedenle birinci hipotez (getiri üstünlüğü) desteklenmemiştir.
+Jüri gerekçelerinin %99,7'si yalnızca verilen göstergelere dayanmış, kararlar tekrar ve gürültü testlerinde orta
+ile yüksek düzeyde tutarlı bulunmuş ve ezber/sızıntı denetimlerinde modelin maskeli verilerden şirketi veya dönemi
+tanıyamadığı görülmüştür; bu bulgular ikinci hipotezin biçimsel bileşenlerini kısmen desteklemektedir. Proje
+sonunda zaman noktası doğru bir BIST veri altyapısı, açık kaynak bir yazılım ve aylık karar raporu prototipi
+üretilmiştir.
+
+**Anahtar kelimeler:** çoklu ajan sistemi, büyük dil modeli, hisse seçimi, Borsa İstanbul, geriye dönük test,
+açıklanabilirlik
+
 ## 1. Giriş
 
 Finansal piyasalar, yüksek hacimli ve çok çeşitli verilerle beslenen dinamik, belirsiz ve karmaşık sistemlerdir.

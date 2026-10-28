@@ -63,8 +63,9 @@ LAYOUT = {
 def parse(md: str) -> tuple[dict[str, str], str, list[str]]:
     md = re.sub(r"<!--.*?-->", "", md, flags=re.S)
     title = re.search(r"\*\*PROJE BAŞLIĞI:\*\* \*\*(.+?)\*\*", md).group(1)
-    info = dict(re.findall(r"^\| ([^|]+?) \| ([^|]+?) \|$", md.split("## 1.")[0], flags=re.M))
-    body = md[md.index("## 1.") :].split("\n---\n")[0]
+    start = md.index("## Özet") if "## Özet" in md else md.index("## 1.")
+    info = dict(re.findall(r"^\| ([^|]+?) \| ([^|]+?) \|$", md[:start], flags=re.M))
+    body = md[start:].split("\n---\n")[0]
     return info, title, body.splitlines()
 
 
