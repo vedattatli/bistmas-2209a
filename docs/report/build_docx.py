@@ -56,6 +56,7 @@ LAYOUT = {
     "figure": (WD_ALIGN_PARAGRAPH.CENTER, 6, 2, 1.0, 0, 0),
     "caption": (WD_ALIGN_PARAGRAPH.CENTER, 0, 10, 1.0, 0, 0),
     "small": (WD_ALIGN_PARAGRAPH.LEFT, 0, 2, 1.0, 0, 0),
+    "ref": (WD_ALIGN_PARAGRAPH.LEFT, 0, 5, 1.1, 1.0, -1.0),  # reference list: hanging indent
 }
 
 
@@ -68,23 +69,27 @@ def parse(md: str) -> tuple[dict[str, str], str, list[str]]:
 
 
 def add_runs(par: Paragraph, text: str, size: float = 11, bold: bool = False, italic: bool = False) -> None:
-    """Add text with **bold** spans; web addresses become clickable links."""
+    """Add text with **bold** and *italic* spans; web addresses become clickable links."""
+    pieces = []
     for k, chunk in enumerate(re.split(r"\*\*(.+?)\*\*", text)):
-        for m, piece in enumerate(URL.split(chunk.replace("`", ""))):
-            if not piece:
-                continue
-            run = par.add_run(piece)
-            run.bold = bold or k % 2 == 1
-            run.italic = italic
-            run.font.name = FONT
-            run.font.size = Pt(size)
-            if m % 2 == 1:
-                link = OxmlElement("w:hyperlink")
-                link.set(qn("r:id"), par.part.relate_to(piece, RT.HYPERLINK, is_external=True))
-                run.font.color.rgb = RGBColor(0x1F, 0x4E, 0x9A)
-                run.font.underline = True
-                link.append(run._r)
-                par._p.append(link)
+        for i, sub in enumerate(re.split(r"(?<![\w*])\*([^*\s][^*]*?)\*(?![\w*])", chunk)):
+            for m, piece in enumerate(URL.split(sub.replace("`", ""))):
+                pieces.append((piece, k % 2 == 1, i % 2 == 1, m % 2 == 1))
+    for piece, b, it, is_link in pieces:
+        if not piece:
+            continue
+        run = par.add_run(piece)
+        run.bold = bold or b
+        run.italic = italic or it
+        run.font.name = FONT
+        run.font.size = Pt(size)
+        if is_link:
+            link = OxmlElement("w:hyperlink")
+            link.set(qn("r:id"), par.part.relate_to(piece, RT.HYPERLINK, is_external=True))
+            run.font.color.rgb = RGBColor(0x1F, 0x4E, 0x9A)
+            run.font.underline = True
+            link.append(run._r)
+            par._p.append(link)
 
 
 def style_par(par: Paragraph, kind: str, extra_before: float = 0) -> None:
@@ -209,10 +214,12 @@ class Writer:
         buf: list[str] = []
         table: list[list[str]] = []
 
+        in_refs = False
+
         def flush_par() -> None:
             if buf:
                 text = " ".join(s.strip() for s in buf)
-                self.text("bullet" if text.startswith("• ") else "body", text)
+                self.text("bullet" if text.startswith("• ") else "ref" if in_refs else "body", text)
                 buf.clear()
 
         for line in lines:
@@ -226,6 +233,7 @@ class Writer:
             if m := re.match(r"^(#{1,3}) (.+)", line):
                 flush_par()
                 level = min(len(m.group(1)) + shift, 3)
+                in_refs = "Kaynakça" in m.group(2)
                 self.text("h3" if level == 3 else "h2", m.group(2), size=11 if level == 3 else 12, bold=True)
             elif m := re.match(r"!\[(.*)\]\((.+)\)", line.strip()):
                 flush_par()
@@ -274,7 +282,12 @@ def add_page_numbers(doc) -> None:
                 add_runs(par, " / ", size=9)
 
 
+def tr_upper(text: str) -> str:
+    return text.replace("i", "İ").replace("ı", "I").upper()
+
+
 def fill_title_box(doc, title: str, executor: str, advisor: str) -> None:
+    executor, advisor = tr_upper(executor), tr_upper(advisor)  # the title page carries the names in capitals
     texts = list(doc.element.body.iter(qn("w:t")))
     for prev, t in zip([None, *texts], texts, strict=False):
         if t.text and t.text.strip() == "ADI:" and prev is not None and (prev.text or "").endswith("YÜRÜTÜCÜSÜNÜN"):
@@ -344,6 +357,16 @@ def build(out: Path, submission: bool) -> None:
         add_runs(cell.paragraphs[0], name, size=10)
     date_par = next(p for p in doc.paragraphs if p.text.strip().startswith("Tarih"))
     add_runs(date_par, f" {report_date}", size=11)
+    # keep the signature table, the blank lines below it and the date line on one page
+    for row in sign.rows:
+        for cell in row.cells:
+            for cp in cell.paragraphs:
+                cp.paragraph_format.keep_with_next = True
+    el = sign._tbl.getnext()
+    while el is not None and el is not date_par._p:
+        if el.tag == qn("w:p"):
+            Paragraph(el, doc._body).paragraph_format.keep_with_next = True
+        el = el.getnext()
 
     # replace the "Sonuç Raporu Formatı" heading list with the body
     paras = doc.paragraphs

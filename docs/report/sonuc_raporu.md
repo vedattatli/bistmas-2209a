@@ -1,6 +1,7 @@
-<!-- TÜBİTAK 2209-A Sonuç Raporu taslağı (Türkçe teslim metni; depo dili İngilizce, bu dosya istisnadır).
-     {{...}} ile işaretli yerler jüri koşusu bitince sonuç dosyalarından doldurulur; [YÜRÜTÜCÜ: ...] yerlerini
-     proje yürütücüsü doldurur. Son hali resmi .docx şablonuna aktarılır. -->
+<!-- TÜBİTAK 2209-A Sonuç Raporu (Türkçe teslim metni; depo dili İngilizce, bu dosya istisnadır).
+     Resmî .docx şablonuna docs/report/build_docx.py ile aktarılır, PDF docs/report/make_pdf.sh ile üretilir.
+     Bölüm 4'teki "önceden kaydedilmemiş" ek analizler: scripts/report_extra_analyses.py
+     (data/runs/hybrid-v2/extra_analyses.json). -->
 
 # 2209/A ÜNİVERSİTE ÖĞRENCİLERİ ARAŞTIRMA PROJELERİ DESTEK PROGRAMI — SONUÇ RAPORU
 
@@ -12,181 +13,362 @@
 | Danışmanın adı | Arş. Gör. Hayri Öztürk |
 | Projenin konusu | Borsa İstanbul (BIST-100) hisseleri için kural tabanlı (deterministik) analiz ile yerel büyük dil modeli (LLM) jürisini birleştiren, geriye dönük ve ileriye dönük olarak test edilen hibrit çoklu ajan hisse öneri sistemi |
 | Başvuru numarası | 1919B012550729 |
-| Proje başlangıç ve bitiş tarihleri | 01.12.2025 – 22.10.2026 |
-| Proje ekibi | Vedat Ali Tatlı (yürütücü), Gizem Coşkun, Rabia Yeşil |
+| Proje başlangıç ve bitiş tarihleri | 01.12.2025 – 30.10.2026 |
+| Proje ekibi | Vedat Ali Tatlı, Gizem Coşkun, Rabia Yeşil |
 
 ## 1. Giriş
 
-Hisse senedi seçimi, sayısal göstergelerin (kârlılık, değerleme, momentum, risk) yanında bu göstergelerin
-yorumlanmasını da gerektiren bir karar problemidir. Literatürdeki sistemler ya yalnızca deterministik
-modellere ya da tek bir LLM çekirdeğine dayanmaktadır. Bu projede iki yaklaşım birleştirilmiştir: kural tabanlı
-ajanlar her ay BIST-100 evreninden aday hisseleri üretip sıralamakta, farklı yatırım felsefelerini temsil eden
-üç LLM jüri ajanı bu adayları gerekçeli puanlarla değerlendirmekte, jüri puanlarının konsensüsü nihai Top-3
-öneriyi belirlemektedir.
+Finansal piyasalar, yüksek hacimli ve çok çeşitli verilerle beslenen dinamik, belirsiz ve karmaşık sistemlerdir.
+Bu ortamda hisse senedi seçmek ve rasyonel yatırım kararları almak, finansal göstergelerin sayısal analizinin
+ötesinde verilerin çok yönlü yorumlanmasını da gerektirdiği için maliyetli ve zaman alıcı bir süreçtir. Bu bölümde
+önce projenin ele aldığı problem tanımlanmakta (1.1), ardından projede bu problemin hangi parçalarının nasıl
+çözüldüğü (1.2), ilgili çalışmalar ve projenin bu çalışmalardan farkı (1.3) ve test edilen hipotezler (1.4)
+açıklanmaktadır.
 
-Projenin iki hipotezi test edilmiştir:
+### 1.1 Problem tanımı
 
-* **H1:** LLM jürisi eklenmiş hibrit sistem, yalnızca kural tabanlı sisteme göre daha yüksek risk-ayarlı getiri
-  sağlar (aynı tarih, aynı işlem maliyeti, aynı karşılaştırma ölçütü ile).
-* **H2:** Jüri katmanı, kararların açıklanabilirliğini ve tutarlılığını artırır (gerekçelerin girdiye dayanması,
-  tekrar edilebilirlik, girdi gürültüsüne ve istem değişikliğine dayanıklılık).
+Projenin ele aldığı karar problemi şudur: Borsa İstanbul'un en büyük 100 şirketinden oluşan BIST-100 evreninde,
+her ayın son işlem gününde yalnızca o güne kadar kamuya açıklanmış bilgiler kullanılarak, sonraki ay elde
+tutulacak az sayıda (üç) hisse seçilmesi ve her seçimin gerekçesinin açık biçimde sunulması. Bu problem üç
+alt sorundan oluşmaktadır.
 
-Türkiye'deki yüksek enflasyon nominal TL getirilerini tek başına anlamsız kıldığı için sonuçlar TL'nin yanında
-ABD doları ve TÜFE ile reelleştirilmiş olarak, ayrıca karşılaştırma ölçütüne göre fazla getiri (aktif getiri)
-olarak raporlanmıştır.
+**(a) Yöntem sorunu: kesinlik ile yorum arasındaki boşluk.** Kârlılık, değerleme ve momentum gibi göstergelere
+dayanan kural tabanlı tarama sistemleri hızlı, ucuz ve tekrarlanabilirdir; ancak yalnızca sayısal eşikler ve
+ağırlıklarla çalıştıkları için göstergeler arasındaki çelişkileri yorumlayamaz ve kararlarını gerekçelendiremezler.
+Büyük dil modelleri (LLM) ise göstergeleri yorumlayıp okunabilir gerekçeler üretebilir; fakat sayısal hesaplamada,
+yüzlerce şirketin taranmasında ve aynı girdiye aynı cevabı vermede güvenilir değildir. Tüm kararın tek bir LLM'e
+ya da tek bir merkezi LLM yöneticisine bırakılması, sistemi o modelin yanlılıklarına ve tek hata noktasına açık
+hâle getirmektedir.
 
-## 2. Proje konusu hakkında kısa bilgi
+**(b) Değerlendirme sorunu: LLM'li geriye dönük testlerin güvenilirliği.** LLM'ler eğitim verilerindeki geçmiş
+fiyat ve ekonomik değerleri ezberleyebilmektedir. Model, test edilen dönemin sonuçlarını eğitim sırasında görmüşse
+geriye dönük test başarısı gerçek bir öngörü yeteneğinden ayırt edilemez ve modele "geleceği bilmiyormuş gibi
+davran" demek de bu etkiyi ortadan kaldırmaz (Lopez-Lira vd., 2025). Şirket adlarının bilinmesi, sızıntı olmasa
+bile modelin genel şirket bilgisine dayanarak karar vermesine yol açabilmektedir (Glasserman ve Lin, 2023). LLM
+tabanlı alım-satım çalışmaları çoğunlukla adı açıkça verilen az sayıda ABD hissesi ve kısa test dönemleri üzerinde
+yürütülmektedir (ör. Yu vd., 2024a, 2024b; Xiao vd., 2024). Bu koşullarda bir LLM katmanının gerçekten
+katkı sağlayıp sağlamadığı sorusu, eşit ağırlıklı portföy gibi güçlü bir ölçüte (DeMiguel vd., 2009), işlem
+maliyetlerine ve şansa karşı sınanmadan yanıtlanamamaktadır.
 
-Sistem altı ajandan oluşur ve öneride tanımlanan beş iş paketine (İP) karşılık gelir:
+**(c) Veri sorunu: Borsa İstanbul'a özgü güçlükler.** BIST-100 bileşimi her çeyrek değişmekte, şirketler endeksten
+çıkmakta, birleşmekte veya işlem kodlarını değiştirmektedir (ör. KOZAL→TRALT). Yalnızca bugün işlem gören şirketlerle
+yapılan bir test, hayatta kalma yanlılığı nedeniyle sonuçları olduğundan iyi gösterir. Finansal tablolar dönem
+sonundan bir ila üç ay sonra açıklanmakta ve sonradan yeniden düzenlenebilmektedir. Bir karar tarihinde henüz
+açıklanmamış bir rakamın kullanılması, geleceği görme yanlılığı yaratır. 2023'ten itibaren uygulanan TMS-29
+enflasyon muhasebesi, farklı yıllara ait tutarların doğrudan karşılaştırılmasını bozmaktadır. Yüksek enflasyon
+nedeniyle nominal Türk lirası getirileri de tek başına anlamlı değildir. Bu sorunları gideren, ücretsiz ve zaman
+noktası doğru (point-in-time) bir BIST veri seti hazır olarak bulunmamaktadır.
+
+Buna göre projenin araştırma sorusu şöyle tanımlanmıştır: *Kural tabanlı bir ön elemenin üzerine eklenen ve farklı
+yatırım bakış açılarını temsil eden bir LLM jürisi, sızıntıya karşı denetlenen, işlem maliyetlerini içeren ve
+önceden kaydedilmiş (pre-registered) bir test düzeninde, yalnızca kural tabanlı sisteme göre riske göre
+düzeltilmiş getiriyi ve kararların açıklanabilirliğini artırır mı?*
+
+### 1.2 Projede çözülen sorunlar
+
+Yukarıdaki üç alt soruna karşılık proje kapsamında şu çözümler geliştirilmiştir:
+
+* **Veri sorunu için (İP1–İP2):** Borsa İstanbul'un resmî endeks listeleri ve duyurularından gün bazında yeniden
+  kurulan, hayatta kalma yanlılığından arındırılmış bir BIST-100 evreni; KAP'ta ilk açıklanan (sonradan
+  düzeltilmemiş) finansal tablolardan ve açıklanma saatlerinden kurulan, her değeri yalnızca açıklandığı andan
+  sonra kullanan bir özellik deposu. TMS-29 dönemi için aynı rapordaki karşılaştırmalı rakamlarla hesaplama
+  yapılmış, sonuçlar TL'nin yanında ABD doları ve enflasyondan arındırılmış (reel) olarak da raporlanmıştır.
+* **Yöntem sorunu için (İP3–İP4):** Görevlerin iki katmana ayrılması. Taramayı, filtrelemeyi ve skorlamayı
+  deterministik ajanlar yapar ve her ay tekrarlanabilir bir 10 adaylık liste üretir. LLM yalnızca bu 10 aday
+  üzerinde, her biri farklı bir gösterge grubunu gören üç bağımsız jüri ajanı olarak paralel puan ve gerekçe
+  üretir. Nihai karar, merkezi bir yöneticinin değil puanların ortalamasının sonucudur.
+* **Değerlendirme sorunu için (İP4–İP5):** Jüriye şirket adı, işlem kodu, tarih ve mutlak tutar verilmemesi
+  (maskeleme); modelin şirketi veya dönemi tanıyıp tanımadığını ölçen ezber ve sızıntı denetimleri; kuralların ve
+  istemlerin sonuçlar görülmeden dondurulması (ön kayıt); hibrit sistemin aynı sayıda hisseli kural tabanlı
+  portföy, eşit ağırlıklı BIST-100 ve 500 rastgele jüri ile aynı tarih, aynı işlem fiyatı ve aynı maliyetlerle
+  karşılaştırılması.
+* **Uygulanabilirlik için:** Gerçek zamanlı aylık karar raporu ve e-posta prototipi; ücretli API kullanmadan
+  yerel bir açık modelle (Qwen Team, 2026) çalışan ve açık kaynak olarak yayımlanan bir yazılım.
+
+### 1.3 İlgili çalışmalar ve projenin farkı
+
+Literatürdeki çalışmalar incelendiğinde, finans alanındaki çoklu ajan sistemlerinin çeşitli alt problemlere
+odaklandığı görülmektedir. Ancak bu çalışmalar, kural tabanlı kesinlik ile çok bakış açılı dil modeli
+muhakemesini birleştiren hibrit bir karar komitesi sunmamaktadır. Türkiye'deki FinTek literatürünü inceleyen
+Yıldız (2022), araştırmaların büyük çoğunluğunun yapay sinir ağları ve derin öğrenme teknikleriyle yalnızca fiyat
+tahminine odaklandığını belirtmektedir. Geleneksel ajan tabanlı modellerde Raudys ve Zliobaite (2006) durağan
+olmayan zaman serisi tahmininde tek katmanlı perseptron ajanların rekabeti ve çoğunluk oylaması üzerinde durmuştur.
+Demirtaş ve Çakmak Şahin (2023) ise ajanların genetik algoritmalar veya makine öğrenmesi ile strateji geliştirdiği
+evrimsel piyasa simülasyonlarını incelemiştir. İş akışı ve görev dağılımı odaklı çalışmalarda Pandey vd. (2000)
+veri toplama, analiz ve emir iletme süreçlerini tek bir finansal danışman ajana devretmiştir. Dodnikov (2024)
+ajanların görevleri birbirine aktardığı doğrusal iş akışlarını incelerken, Choi vd. (2025) yapılandırılmamış
+finansal belgelerden temel performans göstergelerini çıkarıp veri tabanında sorgulayan ardışık bir mimari
+geliştirmiştir.
+
+Son dönemde geliştirilen büyük dil modeli tabanlı çoklu ajan sistemlerinde de benzer yapısal sınırlar
+bulunmaktadır. TradingGPT, farklı risk karakterlerine sahip ajanların münazarasına dayanır (Li vd., 2023). Ancak bu
+sistem hem ön analiz hem de nihai karar süreçlerinde dil modellerini merkezine aldığı için filtreleme aşamasındaki
+belirsizlik riskini artırmaktadır. FinMem, katmanlı belleğe ve ayarlanabilir risk karakterine sahip tek bir LLM
+alım-satım ajanıdır (Yu vd., 2024b). Yatırım firmalarını taklit eden FinCon sisteminde (Yu vd., 2024a) tüm ajanların
+dil modeli tabanlı olması deterministik filtrelemeyi zorlaştırmakta; analist ajanlardan gelen girdilerin tek bir
+merkezi yönetici ajan üzerinde birleştirilmesi sistemi yanlılığa ve tek hata noktası riskine açık hâle
+getirmektedir. TradingAgents de temel, duyarlılık ve teknik analist ajanlarının yanında boğa ve ayı
+araştırmacılarının münazarası, bir risk ekibi ve nihai kararı veren bir işlemci ajanla bir yatırım şirketini
+canlandırmaktadır (Xiao vd., 2024). Finans alanı dışında olmakla birlikte yargısal karar süreçlerini simüle etmesi
+bakımından yapısal bir analoji sunan AUTOLAW (Nguyen vd., 2025), LLM jüri üyelerinin çoğunluk oyuyla karar verir;
+ancak tamamen metin tabanlı müzakereye dayanır ve matematiksel kuralları kesin olarak uygulayan araç-ajanlar ile
+paralel oylama yapan bir karar komitesini bir araya getirmez. Bu LLM sistemlerinin değerlendirmelerinde şirket
+adları açık olarak verilmekte ve test dönemleri modellerin eğitim verisi dönemine düşmektedir; bu durum (b)'de
+açıklanan ezber sorununu doğurmaktadır (Lopez-Lira vd., 2025). Projenin deterministik katmanı ise değer, kârlılık
+ve momentum etkilerini belgeleyen klasik faktör literatürüne dayanmaktadır (Fama ve French, 1993; Jegadeesh ve
+Titman, 1993; Asness vd., 2013).
+
+Tablo 1, LLM tabanlı yakın çalışmaları bu projenin tasarım tercihleriyle karşılaştırmaktadır.
+
+| Çalışma | Kararı veren yapı | Deterministik ön eleme katmanı | Bağımsız paralel oylama | Kimlik ve tarih maskeleme |
+|---|---|---|---|---|
+| TradingGPT (Li vd., 2023) | Farklı karakterli LLM ajanlarının münazarası | Yok | Yok (münazara) | Bildirilmemiş |
+| FinMem (Yu vd., 2024b) | Tek LLM ajanı | Yok | Yok | Bildirilmemiş |
+| FinCon (Yu vd., 2024a) | Analist ajanlar → merkezi yönetici ajan | Yok | Yok (hiyerarşik) | Bildirilmemiş |
+| TradingAgents (Xiao vd., 2024) | Analistler, münazara, risk ekibi → işlemci ajan | Yok | Yok (münazara) | Bildirilmemiş |
+| AUTOLAW (Nguyen vd., 2025) | LLM jüri üyelerinin çoğunluk oyu (hukuk alanı) | Yok | Var | Uygulanamaz |
+| Bu proje | Deterministik Top-10 → üç LLM jüri ajanının puan ortalaması | Var (kural tabanlı tarama ve skorlama) | Var (bilgi bölümlemeli) | Var (ad, kod, tarih, tutar gizli; denetlenmiş) |
+
+Bu karşılaştırmaya göre projenin özgün yönleri şunlardır:
+
+* **İki katmanlı görev ayrımı:** Hesaplama, filtreleme ve sıralama tamamen deterministik ajanlara bırakılmış;
+  LLM yalnızca yorum ve gerekçe gerektiren son seçim adımında kullanılmıştır. Böylece LLM'in zayıf olduğu sayısal
+  işlemler sistemden çıkarılmış, her ay aynı girdilerle aynı aday listesi üretilmiştir.
+* **Merkezi yönetici yerine bilgi bölümlemeli jüri:** Kalite/büyüme, değer ve risk/zamanlama ajanları birbirinin
+  çıktısını görmeden ve her biri yalnızca kendi gösterge grubunu görerek paralel puanlama yapar; karar bu
+  puanların ortalamasıdır. Bu yapı tek bir ajanın yanlılığının karara doğrudan geçmesini engeller ve ajanlar arası
+  uyumun ölçülebilmesini sağlar.
+* **Ezber ve sızıntıya karşı ölçülmüş koruma:** Jüri girdilerinde şirket adı, kod, tarih ve mutlak tutar
+  bulunmamaktadır. Modelin maskeli girdilerden şirketi veya dönemi tanıyıp tanıyamadığı ayrıca test edilmiş ve
+  sonuçları raporlanmıştır (4.3).
+* **Borsa İstanbul'a özgü zaman noktası doğru veri:** Hayatta kalma yanlılığından arındırılmış endeks üyeliği,
+  ilk açıklanan finansal tablolar, TMS-29 ve yüksek enflasyon dikkate alınarak TL, ABD doları ve reel bazda
+  değerlendirme.
+* **Önceden kaydedilmiş ve şansa karşı sınanmış değerlendirme:** Kurallar ve istemler sonuçlar görülmeden git
+  etiketleriyle dondurulmuştur. Hibrit sistem aynı adaylardan seçim yapan 500 rastgele jüriyle ve aynı sayıda
+  hisseli kural tabanlı portföyle karşılaştırılmıştır. Böylece olumlu ya da olumsuz sonucun şans eseri olup
+  olmadığı ayırt edilebilmektedir.
+* **Sıfır maliyetli ve tekrarlanabilir kurulum:** Tüm veriler ücretsiz ve resmî kaynaklardan alınmıştır. Jüri,
+  sürümü sabitlenmiş yerel bir açık modelle (Ollama, 2026) çalıştırılmış ve her çağrı önbelleğe alınmıştır. Kod
+  açık kaynak olarak yayımlanmıştır.
+
+Böylece deterministik ajanların matematiksel kesinliği ile dil modeli jürisinin açıklanabilir nitel muhakemesi tek
+bir yapıda birleştirilmiş, tekil bakış açısı riskinin azaltılması amaçlanmıştır.
+
+### 1.4 Hipotezler
+
+Proje kapsamında temel araştırma sorusuna yanıt aramak üzere aşağıdaki iki hipotez test edilmiştir:
+
+* **H1:** LLM jürisi eklenmiş hibrit sistem; aynı dönem, işlem maliyeti ve karşılaştırma ölçütü koşullarında
+  yalnızca kural tabanlı sisteme göre daha yüksek riske göre düzeltilmiş getiri sağlar.
+* **H2:** Jüri katmanı; gerekçelerin girdiye dayanması, sonuçların tekrar edilebilirliği ile girdi gürültüsüne ve
+  istem değişikliğine karşı dayanıklılık göstermesi sayesinde kararların açıklanabilirliğini ve tutarlılığını
+  artırır.
+
+Türkiye'deki yüksek enflasyon sebebiyle sadece TL bazlı getirilere odaklanmak gerçek performansı gizleyebilmektedir.
+Bu nedenle analiz sonuçları TL'nin yanı sıra ABD doları bazında, TÜFE'ye göre enflasyondan arındırılmış olarak ve
+karşılaştırma ölçütüne kıyasla sağlanan aktif getiri üzerinden değerlendirilmiştir.
+
+## 2. Proje Konusu Hakkında Kısa Bilgi
+
+Sistem altı ajandan ve bir doğrulama katmanından oluşur; bunlar öneride tanımlanan beş iş paketine (İP) karşılık
+gelir:
 
 | Ajan | Tür | Görev |
 |---|---|---|
-| Aday Havuzu (İP1) | deterministik | Her karar tarihinde o gün geçerli resmi BIST-100 üyelerini verir (hayatta kalma yanlılığı yok; endeksten çıkan ve işlem kodu değişen şirketler dahil). |
-| Keşifçi (İP2) | deterministik | Fiyat, finansal tablo ve makro verileri toplar; her değeri yalnızca kamuya açıklandığı tarihten sonra kullanan (point-in-time) özellik deposunu üretir. |
-| Üretici-Filtreleyici (İP3) | deterministik | Likidite, işlem süresi ve özsermaye filtrelerini uygular; Temel Güç, Değerleme ve Momentum-Risk bileşik skorlarını sektör içi sağlam z-skorlarla hesaplar; Top-10 adayı seçer. |
-| Kalite/Büyüme jürisi (İP4) | LLM | Adayı kârlılık ve büyüme açısından 0–1 arası puanlar, gerekçesini yazar. |
-| Değer jürisi (İP4) | LLM | Adayı değerleme açısından puanlar. |
-| Risk/Zamanlama jürisi (İP4) | LLM | Adayı oynaklık, düşüş ve momentum açısından puanlar. |
+| Aday Havuzu Ajanı (İP1) | Deterministik | Her karar tarihinde o gün geçerli olan resmî BIST-100 şirketlerini belirler; endeksten çıkan ve işlem kodu değişen şirketleri de kapsayarak hayatta kalma yanlılığını önler. |
+| Keşifçi Ajan (İP2) | Deterministik | Fiyat, finansal tablo ve makroekonomik verileri toplar; geleceği görme yanlılığını önlemek için her veriyi yalnızca kamuya açıklandığı tarihten itibaren kullanan özellik deposunu oluşturur. |
+| Üretici-Filtreleyici Ajan (İP3) | Deterministik | Likidite, işlem süresi ve özsermaye filtrelerini uygular; Temel Güç, Değerleme ve Momentum-Risk bileşik skorlarını sektör içi sağlam z-skorlarla hesaplayarak her ay ilk 10 adayı seçer. |
+| Kalite/Büyüme Jürisi (İP4) | LLM | Aday şirketleri kârlılık, sermaye verimliliği ve büyüme göstergeleri açısından değerlendirerek 0 ile 1 arasında gerekçeli olarak puanlar. |
+| Değer Jürisi (İP4) | LLM | Aday şirketleri kazanç getirisi, çarpanlar ve güvenlik marjı gibi değerleme göstergeleri açısından inceleyerek 0 ile 1 arasında gerekçeli olarak puanlar. |
+| Risk/Zamanlama Jürisi (İP4) | LLM | Aday şirketleri fiyat momentumu, oynaklık, maksimum düşüş ve likidite göstergeleri açısından değerlendirerek 0 ile 1 arasında gerekçeli olarak puanlar. |
+| Geriye Dönük Test ve Doğrulama (İP5) | Çıktı / Doğrulama | Konsensüsle seçilen portföyleri 2018–2024 döneminde işlem maliyetleriyle test eder; TL, USD ve reel performans metrikleri ile istatistiksel doğrulamaları hesaplar. |
 
-Jüri skoru J, geçerli ajan puanlarının ortalamasıdır; aylık Top-3 öneri J sırasına göre seçilir (eşitlikte
-bileşik skor sırası), J ≥ 0,75 eşiği ise "AL" sinyali olarak ikincil analizde kullanılır. Sistem 2018–2024
-döneminde (84 aylık dönem) aylık yeniden dengelemeli, adım adım ileri (walk-forward) bir geriye dönük testle
-(İP5) doğrulanmış; ayrıca gerçek zamanlı ileriye dönük "kâğıt üzerinde" bir koşu ve e-posta raporu prototipi
-kurulmuştur.
-
-Ajanlar arasındaki veri akışı ve doğrulama adımları Şekil 1'de özetlenmiştir.
+Jüri skoru J, geçerli ajan puanlarının ortalaması alınarak elde edilmektedir. Aylık Top-3 öneri J sırasına göre
+seçilirken puan eşitliği durumunda bileşik skor sıralaması dikkate alınmakta, J ≥ 0,75 eşiği ise ikincil analizde
+"AL" sinyali olarak kullanılmaktadır. Sistem, beşinci iş paketinde 2018–2024 yıllarını kapsayan 84 aylık dönem
+boyunca aylık yeniden dengelemeli ve adım adım ileri taşınan (walk-forward) bir geriye dönük testle doğrulanmıştır.
+Bunun yanı sıra gerçek zamanlı verilerle ileriye dönük, kâğıt üzerinde işlem yapılan bir test akışı ve e-posta
+raporu prototipi geliştirilmiştir. Ajanlar arasındaki veri akışı ve doğrulama adımları Şekil 1'de özetlenmiştir.
 
 ![Şekil 1. Sistem mimarisi: deterministik ajanlar (İP1–İP3), maskeli girdiyle çalışan LLM jürisi (İP4), geriye dönük test, denetimler ve ileriye dönük koşu.](figures/sekil_mimari.png)
 
-Tüm yazılım Python 3.12 ile geliştirilmiştir. Bütçe gerektirmeyen, tekrarlanabilir bir kurulum için LLM jürisi
-yerel olarak (Ollama üzerinde, sabitlenmiş model sürümüyle) çalıştırılmış, tüm veriler ücretsiz ve resmi
-kaynaklardan sağlanmıştır. Kaynak kod, testler ve belgeler açık kaynak olarak yayımlanmıştır:
+Projenin tüm yazılım altyapısı Python 3.12 ile geliştirilmiştir. Ek bir API maliyeti oluşturmayan ve tamamen
+tekrar edilebilir bir çalışma ortamı kurmak amacıyla LLM jürisi, sabitlenmiş model sürümüyle Ollama üzerinde yerel
+olarak çalıştırılmış; ihtiyaç duyulan tüm veriler ise ücretsiz ve resmî kaynaklardan temin edilmiştir. Geliştirilen
+kaynak kodlar, doğrulama testleri ve proje belgeleri açık kaynak olarak paylaşılmıştır:
 https://github.com/vedattatli/bistmas-2209a
 
-## 3. Rapor dönemlerinde yapılan çalışmalar
+## 3. Rapor Dönemlerinde Yapılan Çalışmalar
 
-### 3.1 İP1 — Dinamik BIST-100 evreni (Aday Havuzu ajanı)
-* Borsa İstanbul'un dönemsel endeks değişikliği duyuruları, resmi ağırlık dosyaları ve Borsa İstanbul
-  DataStore'un ücretsiz "2000 yılından itibaren endekslerde bulunan şirketler" dosyaları kullanılarak 2017–2026
-  dönemi için BIST-100/50/30 üyelikleri gün bazında yeniden kurulmuştur (2017-07 … 2026-10 arasında BIST-100'e
-  girip çıkan 255 işlem kodu).
-* Dönem içi olaylar (hızlı giriş, birleşme, kottan çıkış) KAP bildirimleriyle tarihlendirilmiştir. Kurulan
-  üyelik, DataStore'un 135 resmi anlık görüntüsünün (BIST 100/50/30, 2017-07 … 2026-07) tamamını birebir
-  üretmektedir.
-* İşlem kodu değişen şirketler (ör. KOZAL→TRALT, KOZAA→TRMET, IPEKE→TRENJ, KERVT→BESLR, EFORC→EFOR) eski ve yeni
-  kodlarıyla eşleştirilmiş; böylece endeksten çıkan ve adı değişen hisseler veri setinden düşmemiştir.
+### 3.1 İP1 — Dinamik BIST-100 Evreni (Aday Havuzu Ajanı)
+* Borsa İstanbul'un dönemsel endeks değişikliği duyuruları, resmî ağırlık dosyaları ve Borsa İstanbul DataStore
+  (Borsa İstanbul, 2026) üzerinde ücretsiz sunulan "2000 yılından itibaren endekslerde bulunan şirketler" kayıtları
+  birleştirilerek, 2017–2026 dönemi için BIST-100, BIST-50 ve BIST-30 endeks üyelikleri gün bazında yeniden
+  oluşturulmuştur. Bu kapsamda Temmuz 2017 ile Ekim 2026 arasında BIST-100 endeksine girip çıkan toplam 255 farklı
+  işlem kodu tarihsel olarak modellenmiştir.
+* Endeks dönemleri içinde gerçekleşen hızlı giriş, şirket birleşmesi ve kottan çıkma gibi ara olaylar, KAP
+  bildirimleri üzerinden tek tek tarihlendirilmiştir. Oluşturulan dinamik evren, Temmuz 2017 ile Temmuz 2026
+  arasındaki dönemi kapsayan 135 resmî Borsa İstanbul DataStore endeks listesinin tamamıyla birebir örtüşerek
+  doğrulanmıştır.
+* Süreç içerisinde işlem kodu değişen şirketler (örneğin KOZAL→TRALT, KOZAA→TRMET, IPEKE→TRENJ, KERVT→BESLR,
+  EFORC→EFOR) eski ve yeni kodlarıyla eşleştirilmiştir. Böylece zaman içinde endeksten çıkan veya unvanı değişen
+  hisselerin veri setinden düşmesi engellenerek hayatta kalma yanlılığı giderilmiştir.
 
-### 3.2 İP2 — Veri toplama ve özellik deposu (Keşifçi ajanı)
-* **Fiyatlar:** İş Yatırım'ın ham ve düzeltilmiş günlük serileri; 249 hisse, 2017-01-02 … 2026-09-23, 2.436 seans,
-  490.690 satır. Sermaye artırımı, bedelsiz ve temettü gibi 661 kurumsal olay tespit edilip denetlenmiş, satıcı
-  verisindeki düzeltme hataları bir düzeltme tablosuyla giderilmiştir. İşlem görmeyen seanslar ayrıca ele
-  alınmıştır.
-* **Finansal tablolar:** KAP'ta yayımlanan ilk (sonradan düzeltilmemiş) finansal raporlar şirket bazında indirilmiş
-  ve ayrıştırılmıştır: 243 şirket, 6.521 rapor, 3,26 milyon tablo satırı. Sanayi, banka (katılım bankaları
-  dahil), sigorta ve diğer mali kuruluş şablonları ayrı kavram eşlemeleriyle işlenmiştir. KAP'ta raporları
-  bulunmayan, endeksten erken ayrılmış birkaç şirket için İş Yatırım'ın ilk açıklanan değerleri yedek kaynak
-  olarak kullanılmıştır. Son on iki ay (TTM)
-  değerleri aynı rapordaki karşılaştırmalı rakamlardan hesaplanmış, TMS-29 enflasyon muhasebesine geçişte farklı
-  muhasebe tabanları karıştırılmamıştır.
-* **Makro veriler:** TCMB EVDS'den TÜFE (2003=100 ve 2025=100 serileri birleştirilerek; her ayın endeksi
-  açıklandığı günden itibaren kullanılır) ve USD/TRY (EVDS öncelikli, eksik günlerde satıcı verisi), TCMB politika
-  faizi (yürürlük tarihine göre).
-* **Özellik deposu:** 84 karar tarihi × 100 endeks üyesi = 8.400 satır; her satırın dayandığı son finansal tablonun
-  dönem sonu ve açıklanma tarihi ile fiyat tarihi kayıtlıdır; karar tarihinden sonra açıklanan hiçbir bilginin
-  kullanılmadığı her satırda ve otomatik testlerle doğrulanmaktadır. Satırların %84,6'sı filtrelerden geçmektedir.
+### 3.2 İP2 — Veri Toplama ve Özellik Deposu (Keşifçi Ajanı)
+* **Fiyatlar:** İş Yatırım'dan (İş Yatırım, 2026) alınan ham ve düzeltilmiş günlük fiyat serileri kullanılarak,
+  2 Ocak 2017 ile 23 Eylül 2026 tarihleri arasındaki 2.436 seansı ve 249 hisseyi kapsayan 490.690 satırlık bir veri
+  seti oluşturulmuştur. Sermaye artırımı, bedelsiz bölünme ve temettü dağıtımı gibi 661 kurumsal olay tek tek
+  tespit edilip denetlenmiş, veri sağlayıcı kaynaklı fiyat düzeltme hataları oluşturulan bir düzeltme tablosuyla
+  giderilmiştir. İşlem görmeyen seanslar ise veri bütünlüğünü bozmayacak şekilde ayrıca ele alınmıştır.
+* **Finansal tablolar:** KAP'ta (KAP, 2026) yayımlanan ve sonradan revize edilmemiş ilk finansal raporlar şirket
+  bazında indirilerek ayrıştırılmış; toplamda 243 şirkete ait 6.521 rapor ve 3,26 milyon tablo satırı işlenmiştir.
+  Sanayi, katılım bankaları dâhil bankacılık, sigorta ve diğer mali kuruluş şablonları kendi yapılarına uygun ayrı
+  kavram eşlemeleriyle standartlaştırılmıştır. KAP arşivinde eski raporları bulunmayan ve endeksten erken ayrılmış
+  birkaç şirket için İş Yatırım'ın ilk açıklanan tarihsel verileri yedek kaynak olarak kullanılmıştır. Son on iki
+  aylık (TTM) değerler aynı rapordaki karşılaştırmalı rakamlardan hesaplanmış, TMS-29 enflasyon muhasebesine geçiş
+  sürecinde farklı muhasebe tabanlarının birbirine karıştırılmamasına özen gösterilmiştir.
+* **Makroekonomik veriler:** TCMB Elektronik Veri Dağıtım Sistemi (TCMB, 2026) üzerinden 2003=100 ve 2025=100
+  bazlı TÜFE serileri birleştirilerek çekilmiş ve her ayın enflasyon verisi yalnızca resmî olarak açıklandığı
+  günden itibaren sisteme dâhil edilmiştir. Benzer şekilde USD/TRY kuru (EVDS öncelikli olmak üzere eksik günlerde
+  veri sağlayıcı serisiyle tamamlanarak) ve TCMB politika faizi de yürürlük tarihleri esas alınarak veri setine
+  eklenmiştir.
+* **Özellik deposu:** 84 karar tarihi ve her tarihteki 100 endeks üyesi üzerinden toplam 8.400 satırlık bir özellik
+  deposu üretilmiştir. Her satırda, kullanılan son finansal tablonun dönem sonu ve kamuya açıklanma tarihi ile
+  fiyat tarihi kayıt altına alınmıştır. Karar tarihinden sonra açıklanan hiçbir bilginin analizde kullanılmadığı
+  (geleceği görme yanlılığının olmadığı) her satır için otomatik testlerle doğrulanmıştır. Oluşturulan özellik
+  deposundaki satırların %84,6'sı başlangıç filtrelerinden geçmektedir.
 
-### 3.3 İP3 — Deterministik filtreleme ve skorlama (Üretici-Filtreleyici ajanı)
-* Filtreler: en az 250 seans (yaklaşık 12 ay) işlem görme; 6 aylık ortalama günlük işlem hacminin, 5 milyon TL ile o
-  ayki endeks üyelerinin %10'luk diliminden büyük olanının üzerinde olması; fiyat ve en fazla 400 günlük bir finansal
-  tablo bulunması; negatif özsermayenin dışlanması.
-* Göstergeler (sanayi şablonu): Temel Güç — ROIC, brüt ve faaliyet marjı, gelir ve kâr büyümesi; Değerleme —
-  kazanç getirisi, defter/piyasa değeri, FAVÖK/firma değeri, serbest nakit akışı/firma değeri; Momentum-Risk —
-  12-1 ay momentum, 6 aylık oynaklık, 6 aylık en büyük düşüş, 6 aylık ortalama işlem hacmi. Bankaların Temel Güç
-  sütununda ROE, net faiz marjı, maliyet/gelir, özsermaye/aktif ve kâr büyümesi; sigorta ve diğer mali
-  kuruluşlarda ROE, özsermaye/aktif ve kâr büyümesi; tüm mali şirketlerin Değerleme sütununda kazanç getirisi ve
-  defter/piyasa değeri kullanılır.
-* Normalleştirme: her ay sektör grubu içinde medyan/MAD ile sağlam z-skor (±3 kırpma); gözlemi az olan gruplar
-  bir üst gruba (mali / mali olmayan) birleştirilmiştir. Üç sütun eşit ağırlıkla bileşik skoru oluşturur ve her ay
-  Top-10 aday jüriye gönderilir.
+### 3.3 İP3 — Deterministik Filtreleme ve Skorlama (Üretici-Filtreleyici Ajanı)
+* **Filtreler:** Adayların en az 250 seans işlem görmüş olması ve son altı aylık ortalama günlük işlem hacminin
+  hem 5 milyon TL'nin hem de o ayki endeks üyelerinin yüzde onluk diliminin üzerinde olması şart koşulmuştur.
+  Ayrıca şirketlerin güncel fiyat verisi ile en fazla 400 günlük bir finansal tabloya sahip olması gerekmekte olup
+  negatif özsermayeli şirketler değerlendirme dışı bırakılmıştır.
+* **Göstergeler:** Şirketler sanayi şablonuna göre temel güç, değerleme ve momentum ile risk olmak üzere üç ana
+  başlıkta incelenmiştir. Temel güç için yatırılan sermayenin getirisi, brüt ve faaliyet marjı ile gelir ve kâr
+  büyümesi dikkate alınmıştır. Değerleme aşamasında kazanç getirisi, defter/piyasa değeri, FAVÖK getirisi ve
+  serbest nakit akışı getirisi kullanılmıştır. Momentum ve risk ölçümü için ise son bir yıllık momentum, altı
+  aylık oynaklık, en büyük düşüş ve ortalama işlem hacmi baz alınmıştır. Bu gösterge seçimi değer, kârlılık ve
+  momentum etkilerine ilişkin faktör literatürüne dayanmaktadır (Fama ve French, 1993; Jegadeesh ve Titman, 1993;
+  Asness vd., 2013). Bankalar, sigorta şirketleri ve diğer mali kuruluşlar için bu göstergeler özsermaye kârlılığı,
+  net faiz marjı, maliyet/gelir oranı ve aktif kârlılığı gibi sektöre özgü metriklerle uyarlanmıştır.
+* **Normalleştirme:** Elde edilen tüm veriler her ay sektör grupları içinde medyan değerleri kullanılarak sağlam
+  z-skor yöntemiyle normalleştirilmiş ve uç değerler kırpılmıştır. Gözlem sayısı az olan alt gruplar mali veya mali
+  olmayan şirketler olarak daha üst bir kategoride birleştirilmiştir. Son aşamada bu üç ana sütun eşit
+  ağırlıklandırılarak nihai bir bileşik skor elde edilmiş ve her ay en yüksek puanı alan on aday jüri
+  değerlendirmesine aktarılmıştır.
 
-### 3.4 İP4 — LLM jüri ajanları ve konsensüs
-* Model: Qwen3.5 9B, yerel Ollama sunucusunda, sabitlenmiş model özeti (digest) ile; sıcaklık 0, sabit tohum,
-  düşünme kipi kapalı. Ücretli API kullanılmamış, her çağrı önbelleğe alınarak koşular tekrarlanabilir ve
-  kaldığı yerden sürdürülebilir hale getirilmiştir.
-* Bilgi bölümlemesi: her jüri ajanı yalnızca kendi alanının göstergelerini (z-skor ve akran grubu içi yüzdelik)
-  görür. Modelin geçmiş piyasa bilgisini kullanmasını (ezber/sızıntı) önlemek için istemlerde şirket adı, işlem
-  kodu, tarih ve mutlak tutar bulunmaz; şirketler her ay değişen takma adlarla sunulur ve bu kurallar her istem
-  için otomatik olarak doğrulanır.
-* Çıktı şeması: önce gerekçe, sonra 0–1 puan; gerekçede yalnızca istemde bulunan alanlara atıf yapılabilir.
-  Şemaya uymayan yanıt bir kez yeniden istenir, yine uymazsa çekimser sayılır; konsensüs en az iki geçerli oy
-  ister.
-* Bir tam koşu: 84 ay × 10 aday × 3 ajan = 2.520 model çağrısı (çağrı başına yaklaşık 23 saniye).
+### 3.4 İP4 — LLM Jüri Ajanları ve Konsensüs
+* **Model:** Qwen3.5 9B modeli (Qwen Team, 2026) yerel Ollama sunucusunda (Ollama, 2026) sabitlenmiş model
+  özetiyle çalıştırılmıştır. Sistemde sıcaklık değeri sıfır, tohum değeri sabit tutulmuş ve modelin düşünme kipi
+  kapalı konuma getirilmiştir. Herhangi bir ücretli API kullanılmamış olup, her çağrı önbelleğe alınarak koşuların
+  tekrarlanabilir ve istenildiğinde kaldığı yerden sürdürülebilir olması sağlanmıştır.
+* **Bilgi bölümlemesi:** Her jüri ajanı yalnızca kendi uzmanlık alanına ait göstergeleri, yani z-skorlarını ve
+  akran grubu içindeki yüzdelik dilimleri değerlendirir. Modelin geçmiş piyasa bilgilerini ezberleyip sızdırmasını
+  önlemek amacıyla değerlendirme istemlerinde şirket adı, işlem kodu, tarih ve mutlak tutarlara yer verilmemiştir.
+  Bunun yerine şirketler her ay güncellenen takma adlarla sisteme sunulmuş ve bu güvenlik kurallarının ihlal
+  edilmediği her istem için otomatik olarak doğrulanmıştır.
+* **Çıktı şeması:** Jüri ajanlarının değerlendirmelerini sunarken önce kararın gerekçesini, ardından sıfır ile bir
+  arasında değişen puanını iletmesi sağlanmıştır. Gerekçe metninde yalnızca modele verilen istemdeki alanlara atıf
+  yapılmasına izin verilmiştir. Çıktı şemasına uymayan bir yanıt alındığında sistem aynı istemi bir kez daha
+  gönderir; modelin tekrar uyumsuz bir yanıt üretmesi durumunda ise ilgili ajan çekimser kabul edilir. Ayrıca
+  sistemin nihai bir konsensüse varabilmesi için en az iki ajanın geçerli oy kullanması şart koşulmuştur.
+* **Toplam değerlendirme süreci:** 84 aylık test dönemi boyunca her ay on aday hisse üç farklı ajan tarafından
+  değerlendirilmiş ve bu süreçte toplam 2.520 model çağrısı gerçekleştirilmiştir. Her bir model çağrısının
+  yanıtlanması ortalama 23 saniye sürmüştür.
 
-### 3.5 İP5 — Geriye dönük test ve doğrulama
-* Motor: karar her ayın son seansında verilir, işlemler bir sonraki seansın ağırlıklı ortalama fiyatından yapılır;
-  alım ve satımda %0,1 komisyon + 20 baz puan kayma maliyeti; işlem görmeyen hisse için nakit tutulur.
-* Karşılaştırma ölçütü: o tarihteki tüm BIST-100 üyelerinin eşit ağırlıklı portföyü (aynı tarih, aynı maliyet);
-  ikincil olarak yalnızca filtreden geçen hisselerin eşit ağırlıklı portföyü ve BIST-100 fiyat endeksi.
-* Ölçütler: yıllık bileşik getiri (CAGR), Sharpe ve Sortino (TCMB politika faizi üzerinden), en büyük düşüş;
-  aylık aktif getiri için Newey-West t-testi, blok bootstrap güven aralığı, deneme sayısına göre düzeltilmiş
-  (deflated) Sharpe; 500 tohumlu rastgele jüri sıfır dağılımı; maliyet ve kottan çıkış duyarlılıkları.
-* **Ön kayıt (pre-registration):** Bütün parametreler, hipotez testleri ve veri sürümleri jüri koşusundan önce
-  dondurulmuş ve git etiketiyle (`prereg-v1`) kayıt altına alınmıştır. Jüri koşusu sürerken, hibrit sonuçlar
-  henüz hesaplanmadan, sistemin bağımsız bir doğruluk incelemesi yapılmış (her bulgu iki ayrı doğrulayıcıyla
-  sınanmıştır). Bulunan veri ve hesaplama hataları düzeltilmiş, düzeltilmiş şartname yeni jüri koşusundan önce
-  `prereg-v2` olarak dondurulmuştur. Birincil sonuçlar `prereg-v2`'ye, ilk kayıt (`prereg-v1`) ise ikincil
-  analiz olarak raporlanmıştır.
+### 3.5 İP5 — Geriye Dönük Test ve Doğrulama
+* **Test motoru:** Sistemde kararlar her ayın son seansında verilmiş ve alım satım işlemleri bir sonraki seansın
+  ağırlıklı ortalama fiyatı üzerinden gerçekleştirilmiştir. Gerçekçi bir senaryo oluşturmak amacıyla işlemlere
+  binde bir oranında komisyon ile 20 baz puanlık kayma maliyeti eklenmiş, işlem görmeyen hisseler için ise
+  portföyde nakit tutulması sağlanmıştır.
+* **Karşılaştırma ölçütü:** Sistemin performansı öncelikli olarak o tarihteki tüm BIST-100 üyelerinden oluşan eşit
+  ağırlıklı bir portföy ile aynı tarih ve maliyet koşullarında karşılaştırılmıştır. Eşit ağırlıklı portföy,
+  literatürde aşılması güç bir ölçüt olarak bilinmektedir (DeMiguel vd., 2009). İkincil karşılaştırma ölçütü olarak
+  ise yalnızca filtreleme aşamasını geçen hisselerin eşit ağırlıklı portföyü ile BIST-100 fiyat endeksi
+  kullanılmıştır.
+* **Performans ölçütleri:** Değerlendirme sürecinde yıllık bileşik getiri, en büyük düşüş ile TCMB politika faizi
+  baz alınarak hesaplanan Sharpe ve Sortino oranları dikkate alınmıştır. Aylık aktif getirinin istatistiksel
+  anlamlılığı Newey-West t-testi (Newey ve West, 1987) ve durağan blok bootstrap güven aralığı (Politis ve Romano,
+  1994) ile incelenmiş, ayrıca deneme sayısına göre düzeltilmiş Sharpe oranı (Bailey ve López de Prado, 2014)
+  hesaplanmıştır. Sistemin güvenilirliğini sınamak için 500 tohumlu rastgele jüri dağılımı oluşturulmuş, maliyet ve
+  kottan çıkış durumlarına yönelik duyarlılık analizleri yapılmıştır.
+* **Ön kayıt süreci:** Değerlendirmelerden önce tüm parametreler, hipotez testleri ve veri sürümleri dondurularak
+  ilk sürüm etiketiyle (prereg-v1) kayıt altına alınmıştır. Jüri değerlendirmesi devam ederken ve sonuçlar henüz
+  hesaplanmamışken sistem bağımsız bir doğruluk incelemesinden geçirilmiş, elde edilen her bulgu iki ayrı
+  doğrulayıcı tarafından test edilmiştir. Tespit edilen veri ve hesaplama hataları giderildikten sonra düzeltilmiş
+  şartname ikinci bir sürüm (prereg-v2) olarak yeniden dondurulmuştur. Raporda birincil sonuçlar bu güncel sürüme
+  dayandırılırken, ilk kayıt sürümü ikincil analiz olarak sunulmuştur.
 
-### 3.6 İleriye dönük koşu ve e-posta raporu prototipi
-Her ayın son seansından sonra sistemin güncel verilerle Top-3 kararını üretip mühürleyen (zaman damgalı karar
-dosyası ve özet sertifikası) ve sonucu e-posta raporu olarak gönderen bir modül geliştirilmiştir. Karar tarihi
-yalnızca tamamlanmış aylar için seçilir, resmi tatiller dikkate alınır; planlanan uygulama seansı ayın ilk
-seansından sonraya kalan kararlar "geç" olarak etiketlenir. Örnek olarak 30 Eylül 2026 verileriyle üretilen ve 21 Ekim 2026 seansında uygulanmak
-üzere mühürlenen karar (gecikmeli üretildiği için "geç" etiketli; özet değeri `d396e05a…`) şöyledir: kural tabanlı
-Top-10 içinden jüri TUPRS (J = 0,883), KTLEV (0,867) ve THYAO (0,850) hisselerini seçmiş, üç ajanın tamamı geçerli
-oy vermiştir. Raporda her hisse için üç ajanın gerekçesi yer alır (ör. değer ajanı THYAO için "kazanç getirisi,
-defter/piyasa ve FAVÖK getirisi akran grubunda en üst yüzdelikte; serbest nakit akışı getirisi biraz geride"
-gerekçesiyle 0,95 puan vermiştir). Rapor metninin tamamı Ek-1'dedir; e-posta gönderimi aynı içeriği HTML olarak
-iletir. Bu çıktılar yatırım tavsiyesi değildir.
+### 3.6 İleriye Dönük Koşu ve E-posta Raporu Prototipi
+Sisteme, her ayın son seansının ardından güncel verilerle en iyi üç hisse kararını üreten, bu kararı zaman damgası
+ve özet sertifikasıyla mühürleyip e-posta formatında ileten bir modül eklenmiştir. Karar tarihleri belirlenirken
+yalnızca tamamlanmış aylar ve resmî tatiller dikkate alınmıştır. Planlanan uygulama seansı ayın ilk seansından
+sonraya kalırsa, bu kararlar sistem tarafından "geç" üretilmiş olarak etiketlenmektedir.
 
-### 3.7 Yazılım altyapısı ve iş bölümü
-* Açık kaynak depo (`bistmas`, MIT lisansı): yaklaşık 15.900 satır Python, yaklaşık 390 otomatik test, modüller arası
-  bağımlılık kuralları, her deneyin veri sürümü ve yapılandırma özetiyle kaydedildiği bir deney defteri.
-* İş bölümü: Vedat Ali Tatlı — veri katmanı (İP1, İP2) ve proje yönetimi; Gizem Coşkun — skorlama ve geriye dönük
-  test (İP3, İP5); Rabia Yeşil — jüri ajanları, denetimler, ileri koşu ve raporlama (İP4).
+Sistemin çalışmasına örnek olarak 30 Eylül 2026 verileriyle üretilip 21 Ekim 2026 seansında uygulanmak üzere
+mühürlenen geç etiketli bir karar incelenebilir. Bu örnekte jüri, kural tabanlı on aday içinden sırasıyla TUPRS
+(J = 0,883), KTLEV (0,867) ve THYAO (0,850) hisselerini seçmiş ve üç ajanın tamamı geçerli oy kullanmıştır.
+Üretilen raporda seçilen her hisse için üç ajanın sunduğu ayrıntılı gerekçelere yer verilmektedir. Örneğin değer
+ajanı THYAO hissesine, kazanç, defter ve FAVÖK getirilerinin akran grubunda en üst seviyede olduğunu ancak serbest
+nakit akışı getirisinin biraz geride kaldığını belirterek 0,95 puan vermiştir. Bu içeriği HTML formatında ileten
+e-posta raporunun tam metni Ek-1'de sunulmuştur; sistemin ürettiği bu çıktılar yatırım tavsiyesi niteliği
+taşımamaktadır.
 
-### 3.8 Üretken yapay zekâ (ÜYZ) kullanım beyanı
-"TÜBİTAK Destek Süreçlerinde Üretken Yapay Zekânın Sorumlu ve Güvenilir Kullanımı Rehberi" uyarınca beyan edilir:
-* **Araç:** Anthropic Claude (Claude Code kodlama asistanı; Claude Max aboneliği, bkz. Bölüm 6).
-* **Kullanıldığı aşamalar:** yazılımın kodlanması ve testlerin yazılması, veri işleme ve analiz betikleri, kod
-  incelemesi, proje belgelerinin ve bu raporun metin taslağı.
-* **Kullanımın niteliği ve kapsamı:** Sistem tasarımı, iş paketleri, veri kaynakları, yöntem ve parametre
-  kararları proje ekibi tarafından verilmiş; kod ve metin taslakları bu kararlar doğrultusunda araçla üretilmiş,
-  ekip tarafından incelenip düzenlenmiştir. Kodun doğruluğu otomatik testlerle, sonuçlar veri dosyalarıyla
-  karşılaştırılarak doğrulanmıştır; ön kayıt ve bağımsız doğruluk incelemesi bu doğrulamanın parçasıdır. Rapordaki
-  tüm sayılar sistemin ürettiği sonuç dosyalarından alınmıştır. Metnin ve sonuçların sorumluluğu proje ekibine
-  aittir.
-* Sistemin kendisinde araştırma konusu olarak kullanılan LLM jürisi (Qwen3.5 9B) yerel olarak çalıştırılmış olup bu
-  beyanın kapsamı dışındadır.
+### 3.7 Yazılım Altyapısı ve İş Bölümü
+Projenin yazılım altyapısı MIT lisansıyla açık kaynak olarak paylaşılan bistmas deposunda toplanmıştır. Bu depo
+yaklaşık 15.900 satır Python kodu ve yaklaşık 390 otomatik test içermektedir. Sistemde modüller arası bağımlılık
+kuralları tanımlanmış ve her deneyin veri sürümü ile yapılandırma özetinin kaydedildiği bir deney defteri
+oluşturulmuştur. Proje sürecindeki iş bölümü kapsamında Vedat Ali Tatlı birinci ve ikinci iş paketlerini kapsayan
+veri katmanı ile proje yönetimini üstlenirken, Rabia Yeşil üçüncü ve beşinci iş paketlerindeki skorlama ve geriye
+dönük test süreçlerini yürütmüştür. Gizem Coşkun ise dördüncü iş paketi olan jüri ajanları, sistem denetimleri,
+ileriye dönük koşu ve raporlama aşamalarında görev almıştır.
 
+### 3.8 Üretken Yapay Zekâ (ÜYZ) Kullanım Beyanı
+Proje sürecinde üretken yapay zekâ araçlarından faydalanılmış ve bu kullanım "TÜBİTAK Destek Süreçlerinde Üretken
+Yapay Zekânın Sorumlu ve Güvenilir Kullanımı Rehberi"ne uygun olarak beyan edilmiştir. Çalışmalarda kodlama
+asistanı olarak Anthropic Claude kullanılmış ve bu araca altıncı bölümde ayrıntıları verilen Claude Max aboneliği
+üzerinden erişilmiştir. Yapay zekâ desteği yazılımın kodlanması, testlerin yazılması, veri işleme ve analiz
+betiklerinin oluşturulmasının yanı sıra kod incelemesi, proje belgeleri ve sonuç raporunun taslak metinlerinin
+hazırlanması aşamalarında kullanılmıştır.
 
-### 3.9 Çalışma takvimi ve başarı ölçütlerinin gerçekleşme durumu
-Öneride her iş paketi için bir dönem ve başarı ölçütü tanımlanmıştı. Aşağıdaki tablo bu ölçütleri ve
-gerçekleşme durumunu karşılaştırmaktadır.
+Sistem tasarımı, iş paketleri, veri kaynaklarının seçimi ile yöntem ve parametre kararları proje ekibi tarafından
+alınmıştır. Kod ve metin taslakları bu kararlar doğrultusunda yapay zekâ aracıyla üretilmiş, ardından ekip
+tarafından incelenip düzenlenmiştir. Yazılan kodların doğruluğu otomatik testler ve veri dosyası karşılaştırmalarıyla
+sınanmış, ön kayıt süreci ile bağımsız doğruluk incelemeleri de bu kontrol aşamasına dâhil edilmiştir. Raporda yer
+alan tüm sayısal veriler doğrudan sistemin ürettiği sonuç dosyalarından alınmış olup nihai metnin ve sonuçların
+tüm sorumluluğu proje ekibine aittir. Sistemin araştırma konusu olan ve yerel olarak çalıştırılan Qwen3.5 9B jüri
+modeli (Qwen Team, 2026), yapay zekâ yardımcısı olarak değil projenin doğrudan test edilen bir parçası olarak
+kullanıldığından bu beyanın kapsamı dışında tutulmuştur.
 
-| İş paketi (önerideki dönem) | Başarı ölçütü (öneri) | Gerçekleşme |
+TÜBİTAK ÜYZ Rehberi'ndeki veri gizliliği ilkeleri doğrultusunda, kullanılan ticari ÜYZ aracına (Claude) hiçbir
+kişisel veri, gizli bilgi veya kamuya açık olmayan ticari sır girilmemiştir; sistemde işlenen tüm finansal veriler
+KAP, Borsa İstanbul ve TCMB gibi kamuya açık resmî kaynaklardan alınmıştır. ÜYZ asistanı tarafından üretilen tüm
+kod betikleri ve analiz şablonları yaklaşık 390 otomatik birim ve entegrasyon testi, bağımsız doğrulayıcı
+incelemeleri ve ham veri dosyalarıyla yapılan çapraz kontrollerden geçirilerek doğrulanmıştır.
+
+### 3.9 Çalışma Takvimi ve Başarı Ölçütlerinin Gerçekleşme Durumu
+Öneride her iş paketi için bir dönem ve başarı ölçütü tanımlanmıştı. Aşağıdaki tablo bu ölçütleri ve gerçekleşme
+durumunu karşılaştırmaktadır.
+
+| İş paketi ve önerilen dönem | Başarı ölçütü | Gerçekleşme durumu |
 |---|---|---|
-| İP-1 Aday havuzu ajanı (12/2025) | BIST-100 evreni; eksik veri oranı < %2 | Gerçekleşti. Zaman noktası BIST-100 evreni kuruldu ve Borsa İstanbul'un 135 resmi bileşen listesiyle birebir doğrulandı. Her karar tarihinde endeks üyelerinin %99,3–100'ünün işlem fiyatı mevcuttur. |
-| İP-2 Veri toplama ve özellik deposu (01–02/2026) | ETL akışı otomatik; özellik deposundan sorgu ≤ 300 ms | Gerçekleşti, kaynak değişikliğiyle. Finnhub yerine ücretsiz kamu kaynakları (KAP, İş Yatırım, Borsa İstanbul DataStore, TCMB EVDS) kullanıldı. ETL, kaldığı yerden devam edebilen komut satırı işleri olarak otomatiktir. Bir karar tarihinin özellik deposu sorgusu yaklaşık 2 ms sürmektedir; finansal tablo kapsamı %99,7'dir. |
-| İP-3 Faktör hesaplama ve normalizasyon (03–04/2026) | Tüm faktörler hesaplanmış; faktör korelasyon raporu | Gerçekleşti, sadeleştirilerek. Dört faktör grubu yerine üç sütun (temel güç, değerleme, momentum-risk) sektör içi sağlam z-skorla hesaplandı. Sütunlar arası Spearman korelasyonu 0,17–0,28'dir; sütunlar birbirinden büyük ölçüde bağımsızdır. |
-| İP-3 Filtreleme ve ön eleme (05/2026) | Filtre sonrası eksik veri oranı < %1; Top-10 listesi | Gerçekleşti. 84 ayın tamamında Top-10 listesi üretildi; Top-10 adayların tamamında üç sütun da hesaplıdır. |
-| İP-4 Konsensüs ve raporlama modülü (05–08/2026) | Top-3 otomatik üretiliyor; özet rapor şablonu (e-posta ve ayrıntı) | Gerçekleşti. Üç LLM jüri ajanı, konsensüs ve Top-3 seçimi; aylık karar raporu ve e-posta raporu prototipi geliştirildi (Ek-1). |
-| İP-5 Sistem doğrulaması (08–10/2026) | CAGR, Sharpe, Sortino, en büyük düşüş; kıyaslama | Gerçekleşti. 84 aylık geriye dönük test; TL, USD ve reel metrikler; eşit ağırlıklı BIST-100 ile kıyaslama ve istatistiksel testler (4.1–4.2). |
-| Sonuç analizi ve raporlama (11/2026) | Nihai rapor; CAGR ≥ %15, Sharpe > 1,2; açık kaynak depo; Llama 3 70B geçiş planı | Kısmen. Rapor ve açık kaynak depo tamamlandı. Nominal CAGR hedefi tüm portföylerde aşıldı, ancak bu enflasyondan kaynaklanmaktadır; politika faizi düşülerek hesaplanan Sharpe > 1,2 hedefine ulaşılamadı. 70B model geçişi donanım kısıtı nedeniyle yapılmadı; yerine farklı model aileleriyle çapraz jüri sonraki çalışma olarak önerildi (4.4). |
+| İP-1 Aday havuzu ajanı (12/2025) | BIST-100 evreninin kurulması ve eksik veri oranının %2'nin altında olması | Başarıyla gerçekleşti. BIST-100 evreni oluşturuldu ve Borsa İstanbul'un 135 resmî bileşen listesiyle birebir doğrulandı. Her karar tarihinde endeks üyelerinin %99,3–100'ünün işlem fiyatına ulaşıldı. |
+| İP-2 Veri toplama ve özellik deposu (01–02/2026) | Veri akışının otomatikleşmesi ve özellik deposundan 300 milisaniyenin altında sorgu yapılması | Kaynak değişikliğiyle gerçekleşti. Finnhub yerine KAP, İş Yatırım, Borsa İstanbul DataStore ve TCMB EVDS gibi ücretsiz kamu kaynakları kullanıldı. Veri akışı kaldığı yerden devam edebilen komut satırı işleri olarak otomatikleştirildi. Özellik deposu sorgusu yaklaşık 2 milisaniyeye düştü ve finansal tablo kapsamı %99,7'ye ulaştı. |
+| İP-3 Faktör hesaplama ve normalizasyon (03–04/2026) | Tüm faktörlerin hesaplanması ve faktör korelasyon raporunun oluşturulması | Süreç sadeleştirilerek gerçekleşti. Dört faktör grubu yerine temel güç, değerleme ve momentum-risk sütunları sektör içi sağlam z-skor yöntemiyle hesaplandı. Sütunlar arası Spearman korelasyonu 0,17–0,28 aralığında kaldı; sütunlar birbirinden büyük ölçüde bağımsızdır. |
+| İP-3 Filtreleme ve ön eleme (05/2026) | Filtreleme sonrası eksik veri oranının %1'in altında kalması ve en iyi on aday listesinin oluşturulması | Başarıyla gerçekleşti. 84 ayın tamamında en iyi on aday listesi üretildi ve bu adayların hepsinde üç sütun eksiksiz hesaplandı. |
+| İP-4 Konsensüs ve raporlama modülü (05–08/2026) | En iyi üç kararın otomatik üretilmesi ve e-posta ile ayrıntılı özet rapor şablonunun oluşturulması | Başarıyla gerçekleşti. Üç jüri ajanıyla konsensüs sağlanarak en iyi üç hisse seçimi yapıldı; aylık karar raporu ve e-posta raporu prototipi geliştirildi (Ek-1). |
+| İP-5 Sistem doğrulaması (08–10/2026) | Yıllık bileşik getiri, Sharpe ve Sortino oranları ile en büyük düşüş metriklerinin hesaplanıp kıyaslanması | Başarıyla gerçekleşti. 84 aylık geriye dönük test yapıldı. TL, ABD doları ve reel metrikler hesaplanarak sonuçlar eşit ağırlıklı BIST-100 portföyüyle istatistiksel olarak kıyaslandı (4.1–4.2). |
+| Sonuç analizi ve raporlama (11/2026; öngörülenden erken tamamlandı) | Nihai raporun ve açık kaynak deponun tamamlanması, yıllık bileşik getirinin %15'in ve Sharpe oranının 1,2'nin üzerinde olması, 70B modele geçiş | Kısmen gerçekleşti. Rapor ve açık kaynak depo tamamlandı. Getiri hedefi tüm portföylerde aşılsa da bu durumun enflasyondan kaynaklandığı görüldü; politika faizi düşülerek hesaplanan Sharpe hedefine ulaşılamadı. Donanım kısıtları nedeniyle 70B modele geçiş yapılamadı; bunun yerine farklı model aileleriyle çapraz jüri kurulması önerildi (4.4). |
+
+**Takvim notu:** Başvuru önerisinde Kasım 2026 olarak öngörülen sonuç analizi ve raporlama iş paketi, veri akışının
+ve yerel jüri değerlendirmelerinin otomatikleştirilmesi sayesinde proje bitiş tarihi olan 30.10.2026 itibarıyla
+planlanandan önce tamamlanmıştır.
 
 ## 4. Sonuç
 
-### 4.1 Kural tabanlı sistem (2018–2024, 84 ay)
+### 4.1 Kural Tabanlı Sistem (2018–2024, 84 ay)
+
 | Portföy | CAGR (TL) | Sharpe | CAGR (USD) | CAGR (reel) | Aylık aktif getiri (t) |
 |---|---|---|---|---|---|
 | Kural tabanlı Top-3 | %40,8 | 0,56 | %2,3 | %4,2 | −%0,05 (−0,07) |
@@ -195,15 +377,16 @@ gerçekleşme durumunu karşılaştırmaktadır.
 | BIST-100 eşit ağırlık (ölçüt) | %44,1 | 0,73 | %4,7 | %6,7 | — |
 | Filtreden geçenler eşit ağırlık | %42,3 | 0,68 | %3,4 | %5,3 | — |
 
-Kural tabanlı skor tek başına eşit ağırlıklı BIST-100 portföyünü anlamlı biçimde geçememiştir. Nominal TL
-getiriler önerideki %15 CAGR ölçütünün çok üzerindedir; ancak bu, dönemin yüksek enflasyonunu yansıtır ve
-karşılaştırma ölçütü de aynı düzeydedir. Reel ve dolar bazında getiriler tek haneli kalmıştır. Önerideki
-Sharpe > 1,2 ölçütüne, risksiz getiri olarak TCMB politika faizi düşüldüğünde, karşılaştırma ölçütü dahil hiçbir
-portföy ulaşamamıştır (yüksek faiz döneminde hisse getirilerinin risksiz getiriyi aşan kısmı sınırlı kalmıştır).
+Kural tabanlı skor tek başına eşit ağırlıklı BIST-100 portföyünü anlamlı bir şekilde geçememiştir. Nominal TL
+getirileri önerideki %15'lik bileşik getiri hedefinin çok üzerinde gerçekleşse de bu durum dönemin yüksek
+enflasyonunu yansıtmaktadır ve karşılaştırma ölçütü de benzer seviyelerdedir. Reel ve dolar bazındaki getiriler
+ise tek haneli rakamlarda kalmıştır. Öneride hedeflenen 1,2'nin üzerindeki Sharpe oranına, risksiz getiri olarak
+TCMB politika faizi düşüldüğünde karşılaştırma ölçütü dâhil hiçbir portföy ulaşamamıştır. Bunun temel nedeni,
+yüksek faiz döneminde hisse getirilerinin risksiz getiriyi aşan kısmının oldukça sınırlı kalmasıdır.
 
-### 4.2 Hibrit sistem — H1
-Birincil analizde (`prereg-v2`) jüri 84 ayın tamamında 2.520 değerlendirmenin hepsini geçerli biçimde tamamlamış
-(çekimser oranı %0), her aday için J hesaplanmıştır.
+### 4.2 Hibrit Sistem — H1
+Birincil analizde (prereg-v2) jüri, 84 ayın tamamında 2.520 değerlendirmenin hepsini geçerli bir şekilde
+tamamlamış ve hiç çekimser kalmadan her aday için jüri skorunu hesaplamıştır.
 
 | Portföy | CAGR (TL) | Sharpe | En büyük düşüş | CAGR (USD) | CAGR (reel) | Aylık aktif getiri (NW t) | Hibrit − kural (NW t, p) |
 |---|---|---|---|---|---|---|---|
@@ -216,117 +399,225 @@ Birincil analizde (`prereg-v2`) jüri 84 ayın tamamında 2.520 değerlendirmeni
 
 ![Şekil 2. Hibrit, kural tabanlı ve karşılaştırma portföylerinin 2018–2024 net değer eğrileri (sol: TL, sağ: ABD doları; logaritmik ölçek, işlem maliyetleri düşülmüş).](figures/sekil1_nav.png)
 
-* **H1 desteklenmemiştir.** Hibrit Top-3, kural tabanlı Top-3'e göre ayda ortalama %0,43 daha düşük getiri
-  sağlamıştır; fark istatistiksel olarak anlamlı değildir (Newey-West t = −0,56, p = 0,58; aktif getirinin %95
-  bootstrap güven aralığı [−%1,68; +%0,86]). Top-5'te hibrit sistem ayda %0,15 öndedir, bu fark da anlamlı
-  değildir. Jüriye her ay 10 aday gittiği için Top-10 iki sistemde aynı portföydür. Portföylerin net değer eğrileri Şekil 2'de verilmiştir.
-* Aynı adaylara rastgele puan veren 500 "rastgele jüri" ile karşılaştırıldığında hibrit Top-3'ün getirisi bu
-  dağılımın 41. yüzdeliğindedir (rastgele jürilerin CAGR ortalaması %36,6; %5–%95 aralığı %24,4–%49,1): jüri
-  sıralaması, aday listesinin rastgele sıralanmasından ayırt edilememektedir.
-* Jüri skoru J ile bileşik skor arasındaki aylık Spearman korelasyonu ortalama 0,22'dir; J, bileşik skoru tekrar
-  etmemekte ancak ertesi ay getirisi için bileşik sıranın ötesinde ek bilgi de taşımamaktadır (J'nin kesitsel
-  regresyon katsayısı 0,005; t = 0,10).
-* "AL" sinyali varyantı (J ≥ θ olan adaylar, yoksa nakit): θ = 0,75'te ayda ortalama 4,3 AL sinyali, yalnızca 2 ay
-  nakit, TL CAGR %39,3 (aylık aktif −%0,23, t = −0,30); θ = 0,70 ve 0,80'de sonuç değişmemektedir (aktif t −0,03 ve
-  −1,06).
-* Hiçbir portföyün aktif getirisi Bonferroni düzeltmesi öncesinde de sonrasında da (8 yapılandırma, α = 0,0063)
-  anlamlı değildir; deneme sayısına göre düzeltilmiş Sharpe olasılığı hibrit Top-3 için 0,02'dir.
+* **Birinci hipotez (H1) desteklenmemiştir.** H1 doğrudan riske göre düzeltilmiş getiri üstünlüğü iddiası
+  taşıdığı için iki soru incelenmiştir: (1) Hibrit sistem daha yüksek ortalama getiri sağlamakta mıdır? (2) Hibrit
+  sistem üstlendiği riske kıyasla (Sharpe oranı) daha iyi performans göstermekte midir? İlk soru için uygulanan
+  Newey-West t-testi (Newey ve West, 1987; t = −0,56, p = 0,58), iki sistem arasındaki aylık ortalama getiri
+  farkının (−%0,43; %95 bootstrap güven aralığı −%1,68 ile +%0,86) istatistiksel olarak anlamlı olmadığını
+  göstermektedir. İkinci soru için yıllıklaştırılmış Sharpe oranları incelendiğinde hibrit Top-3 portföyü (0,45),
+  kural tabanlı Top-3 portföyünün (0,56) 0,11 puan gerisinde kalmıştır. Günlük fazla getiriler üzerinde eşleştirilmiş
+  durağan blok bootstrap (ortalama blok uzunluğu 21 seans, 2.000 tekrar) ile Sharpe farkı (Sharpe_hibrit −
+  Sharpe_kural) sınandığında %95 güven aralığı −0,61 ile +0,40 arasında bulunmuş ve sıfırı kapsamıştır; tekrarların
+  %32'sinde fark pozitif çıkmıştır. Dolayısıyla bulgular, hem ham getiri farkı hem de risk ayarlı getiri bakımından
+  H1'i desteklememektedir. Bununla birlikte, 84 aylık örneklemdeki istatistiksel güç sınırları göz önüne
+  alındığında, bu bulgu "LLM jürisinin hiçbir koşulda katkısı olamaz" şeklinde mutlak bir yanlışlama olarak değil,
+  incelenen örneklem ve model ölçeğinde anlamlı bir üstünlük gözlenmediği şeklinde yorumlanmalıdır. Top-5
+  portföyünde hibrit sistem ayda %0,15 önde olsa da bu fark da anlamlı değildir. Jüriye her ay 10 aday gönderildiği
+  için Top-10 portföyü her iki sistemde de aynıdır. Portföylerin işlem maliyetleri düşülmüş net değer eğrileri
+  Şekil 2'de sunulmuştur.
+* Aynı adaylara rastgele puan veren 500 rastgele jüri simülasyonu ile karşılaştırıldığında, hibrit Top-3
+  portföyünün getirisi bu dağılımın 41. yüzdeliğinde kalmıştır. Rastgele jürilerin yıllık bileşik getiri ortalaması
+  %36,6 olup %5–%95 aralığı %24,4 ile %49,1 arasındadır. Bu durum, jürinin yaptığı sıralamanın aday listesinin
+  rastgele sıralanmasından ayırt edilemediğini göstermektedir.
+* Jüri skoru J ile bileşik skor arasındaki aylık Spearman korelasyonu ortalama 0,22'dir. Buna göre jüri skoru
+  bileşik skoru doğrudan tekrar etmemekte, ancak bir sonraki ayın getirisi için bileşik sıralamanın ötesinde ek bir
+  bilgi de taşımamaktadır (jüri skorunun kesitsel regresyon katsayısı 0,005; t = 0,10).
+* Jüri skorunun θ eşiğinden büyük veya eşit olduğu adaylar için alım yapılan, aksi takdirde nakitte kalınan "AL"
+  sinyali varyantı da incelenmiştir. θ = 0,75 için ayda ortalama 4,3 AL sinyali üretilmiş, yalnızca 2 ay nakitte
+  kalınmış ve TL bazında %39,3 yıllık bileşik getiri sağlanmıştır (aylık aktif −%0,23; t = −0,30). Eşiğin 0,70 veya
+  0,80 olarak değiştirilmesi sonucu değiştirmemiştir (aktif t sırasıyla −0,03 ve −1,06).
+* İncelenen hiçbir portföyün aktif getirisi, 8 yapılandırma için α = 0,0063 ile yapılan Bonferroni düzeltmesi
+  öncesinde veya sonrasında anlamlı çıkmamıştır. Deneme sayısına göre düzeltilmiş Sharpe olasılığı hibrit Top-3
+  için 0,02'dir.
 
-### 4.3 Açıklanabilirlik ve tutarlılık — H2
+### 4.3 Açıklanabilirlik ve Tutarlılık — H2
 ![Şekil 3. Sol: jüri ajanlarının puan dağılımı (her ajan 840 değerlendirme); sağ: aylık jüri skoru J ile kural tabanlı bileşik sıra.](figures/sekil2_juri.png)
 
-* **Gerekçelerin girdiye dayanması.** 2.520 gerekçenin %99,7'si yalnızca istemde verilen göstergelere atıf yapmıştır
-  (ajanlara göre %100, %99,9 ve %99,3). Gerekçelerde şirket adı, işlem kodu, yıl veya ay adı gibi bilgi sızıntısı
-  bulunmamıştır (sızıntı bayrağı oranı %0).
-* **Tekrarlanabilirlik.** Örneklemdeki 17 aday, sıcaklık 0,7 ile beşer kez yeniden puanlanmıştır. Sınıf içi
-  korelasyon (ICC) Kalite/Büyüme ajanında 0,84, Risk/Zamanlama ajanında 0,85, Değer ajanında 0,55'tir. İlk iki
-  ajanın puanları rastgeleliğe karşı tutarlı, Değer ajanınınki orta düzeyde tutarlıdır.
-* **Sağlamlık.** Tabakalı olarak seçilen 6 karar ayında jüri iki değişik koşulda yeniden çalıştırılmıştır
-  (360 çağrı). İlk koşulda istemdeki tüm z-skorlarına ±0,25 aralığında rastgele gürültü eklenmiştir. J sıralaması
-  ile asıl sıralama arasındaki Kendall τ ortalama 0,63, Top-3 örtüşmesi ortalama %78'dir (3 hisseden yaklaşık 2,3'ü
-  aynı kalır). İkinci koşulda istemler aynı içerikle yeniden yazılmıştır. Bu koşulda τ = 0,57, Top-3 örtüşmesi %78'dir.
-  Jüri kararları küçük girdi ve ifade değişikliklerine karşı orta düzeyde sağlamdır. Top-3'ün yaklaşık üçte biri
-  sınırdaki adaylar arasında yer değiştirmektedir; bu da J'nin ek getiri bilgisi taşımamasıyla tutarlıdır.
-* **Ajanlar arası uyum.** Ajanların aynı aday için verdikleri puanlar arasındaki ortalama ikili Spearman korelasyonu
-  −0,10, Krippendorff α (aralık) −0,19'dur. Her ajan farklı bir gösterge grubunu gördüğü için bu bekleniyordu:
-  jüri tek bir görüşün tekrarı değil, üç ayrı bakış açısıdır. Puan dağılımları da farklıdır (Şekil 3). Değer ajanı
-  en cömert, Risk/Zamanlama ajanı en eleştirel ajandır.
-* **Ezber ve sızıntı denetimleri** (84 adaylık tabakalı örneklem):
-  * Kimlik tahmini: maskelenmiş göstergelerden şirketi doğru tahmin oranı %0'dır (şans düzeyi ~%1). Dönem (yıl ve
-    çeyrek) doğru tahmin oranı %3,6'dır (şans düzeyi %3,4). Model şirketleri göstergelerden tanıyamamaktadır.
-  * Doğrudan soru: gerçek şirket adı ve tarih verilerek kapanış fiyatı sorulduğunda ortalama mutlak yüzde hata %90,
-    %10 içinde doğru tahmin oranı %4,8, ertesi ay yön tahmini doğruluğu %45'tir. Model 2018–2024 fiyatlarını
-    ezberlememiştir. Buna karşın aynı sorularda "bilmiyorum" yerine yön belirtme olasılığı ortalama 0,85'tir;
-    yani model bilmediği konuda kendinden emin yanıt verme eğilimindedir. Bu da jüri istemlerinde kimlik ve tarihin
-    gizlenmesinin gerekliliğini doğrulamaktadır.
-  * Tarih kolları: aynı istemde tarih eklendiğinde, gerçek şirket ve tarih açıklandığında ya da tarih 3 yıl ileri
-    veya 7 yıl geri kaydırıldığında puanlar sistematik olarak değişmemiştir. Ortalama fark 0,002'nin altında,
-    ortalama mutlak fark 0,04–0,06, maskeli puanlarla Spearman korelasyonu 0,89–0,94'tür. Kimliğin açılması
-    puanların yalnızca %21'ini 0,1'den fazla değiştirmiştir.
-* **İnsan değerlendirmesi.** Ön kayıtta öngörülen, 30 jüri gerekçesinin üç değerlendirici tarafından kör
-  puanlanması zaman kısıtı nedeniyle yapılamamış ve sonraki çalışmaya bırakılmıştır; değerlendirme formları
-  hazırlanmıştır (`docs/report/rubric/`).
-* **Sonuç (H2).** Jüri gerekçeleri girdiye dayalı, sızıntısız, büyük ölçüde tekrarlanabilir ve orta düzeyde sağlamdır; model ne şirket
-  kimliğini ne de geçmiş fiyatları kullanabilmektedir. Bu yönüyle jüri katmanı, kural tabanlı sıralamaya her aday
-  için okunabilir ve denetlenebilir bir gerekçe eklemektedir; ancak bu açıklanabilirlik getiri üstünlüğüne
-  dönüşmemiştir (4.2).
+* **Gerekçelerin girdiye dayanması:** 2.520 gerekçenin %99,7'si yalnızca modele verilen göstergelere atıf yapmış
+  olup bu oran ajanlar bazında sırasıyla %100, %99,9 ve %99,3'tür. Üretilen gerekçelerde şirket adı, işlem kodu,
+  yıl veya ay adı gibi hiçbir bilgi sızıntısı bulunmamış ve sızıntı bayrağı oranı %0 olmuştur.
+* **Tekrarlanabilirlik:** Örneklemdeki 17 aday, sıcaklık değeri 0,7 olarak ayarlanıp beşer kez yeniden
+  puanlanmıştır. Sınıf içi korelasyon Kalite/Büyüme ajanında 0,84, Risk/Zamanlama ajanında 0,85, Değer ajanında
+  ise 0,55'tir. İlk iki ajanın puanları rastgeleliğe karşı yüksek tutarlılık gösterirken Değer ajanının puanları
+  orta düzeyde tutarlıdır.
+* **Sağlamlık:** Tabakalı olarak seçilen altı karar ayında jüri iki farklı koşul altında toplam 360 çağrı ile
+  yeniden çalıştırılmıştır. İstemdeki tüm z-skorlarına ±0,25 aralığında rastgele gürültü eklendiğinde jüri
+  sıralaması ile asıl sıralama arasındaki Kendall tau değeri ortalama 0,63, Top-3 örtüşmesi ortalama %78 olmuştur
+  (üç hisseden yaklaşık 2,3'ü aynı kalmıştır). İstemler aynı içerikle yeniden yazıldığında tau 0,57 ve örtüşme
+  yine %78'dir. Jüri kararları küçük girdi ve ifade değişikliklerine karşı orta düzeyde sağlamdır. Top-3'ün yaklaşık
+  üçte biri sınırdaki adaylar arasında yer değiştirmektedir; bu durum jüri skorunun ek getiri bilgisi
+  taşımamasıyla tutarlıdır.
+* **Ajanlar arası uyum:** Ajanların aynı aday için verdikleri puanlar arasındaki ortalama ikili Spearman
+  korelasyonu −0,10, Krippendorff alfa (Krippendorff, 2004) aralık değeri −0,19'dur. Her ajan farklı bir gösterge
+  grubunu incelediği için bu beklenen bir sonuçtur; jüri tek bir görüşün tekrarı değil, üç ayrı bakış açısıdır.
+  Şekil 3'te görüldüğü üzere puan dağılımları da farklıdır: Değer ajanı en cömert, Risk/Zamanlama ajanı en
+  eleştirel puanlamayı yapmaktadır. Burada raporlanan negatif uyum değerleri, aynı boyutu ölçen değerlendiriciler
+  arasındaki klasik bir güvenilirlik ölçütü olarak değil, farklı finansal boyutlara odaklanan ajanların birbirinden
+  bağımsız sinyaller ürettiğinin göstergesi olarak okunmalıdır.
+* **Puan birleştirme yöntemine duyarlılık (önceden kaydedilmemiş ek analiz):** Ajanların puan ölçeklerinin farklı
+  olması, ham puanların doğrudan ortalanmasının nihai skoru etkileyip etkilemediği sorusunu doğurmaktadır. Bu
+  nedenle önceden kaydedilen ham ortalamaya ek olarak iki alternatif aynı test motoru ve maliyetlerle denenmiştir.
+  Ajan puanları her ay kendi içinde z-skora çevrilip ortalandığında hibrit Top-3'ün yıllık bileşik getirisi %41,2
+  (Sharpe 0,58), sıra tabanlı birleştirmede %40,3 (Sharpe 0,56) olmuş; kural tabanlı Top-3'e göre aylık fark
+  sırasıyla −%0,06 (t = −0,07) ve −%0,09 (t = −0,11) olarak bulunmuştur. Ölçek farkının giderilmesi hibrit sistemin
+  açığını büyük ölçüde kapatmakta, ancak anlamlı bir üstünlük yaratmamaktadır. Bu analizler sonuçlar görüldükten
+  sonra yapıldığı için H1 kararını değiştirmemekte, sonraki bir ön kayıtta birincil birleştirme kuralı olarak
+  sınanması gereken bir bulgu olarak raporlanmaktadır.
+* **Ezber ve sızıntı denetimleri:** 84 adaylık tabakalı bir örneklem üzerinde yapılan denetimlerde, maskelenmiş
+  göstergelerden şirketi doğru tahmin etme oranı yaklaşık %1'lik şans düzeyine karşılık %0 olarak bulunmuştur. Yıl
+  ve çeyrek tahmini ise %3,4'lük şans düzeyine yakın biçimde %3,6'dır. Bu sonuç, bu örneklemde ve uygulanan
+  sorgulama protokolü altında modelin şirket kimliğini veya dönem bilgisini maskeli göstergelerden çıkaramadığına
+  işaret etmektedir. Doğrudan şirket adı ve tarih verilerek yapılan fiyat tahminlerindeki yüksek hata (ortalama
+  mutlak yüzde hata %90; %10 hata payı içinde doğruluk %4,8; yön doğruluğu %45) modelin ilgili dönem fiyatlarını
+  doğrudan hatırlayamadığını göstermektedir. Ancak bu testler modelin örtük tarihsel bilgisinden hiçbir koşulda
+  yararlanamayacağını kanıtlamaz; yalnızca belirlenen denetim ölçütleri bakımından açık bir sızıntı gözlenmediğini
+  gösterir. Model bu sorularda "bilmiyorum" demek yerine ortalama 0,85 olasılıkla bir yön belirtmiştir; bilmediği
+  konularda kendinden emin yanıt verme eğilimi, istemlerde kimlik ve tarihin gizlenmesi kuralının gerekliliğini
+  doğrulamaktadır. Ayrıca aynı isteme tarih eklendiğinde, şirket ve tarih kimliği açıklandığında veya tarih üç yıl
+  ileri ya da yedi yıl geri kaydırıldığında puanlar sistematik olarak değişmemiştir: ortalama fark 0,002'nin altında,
+  ortalama mutlak fark 0,04–0,06 aralığında ve maskeli puanlarla Spearman korelasyonu 0,89–0,94'tür. Kimliğin
+  açıklanması puanların yalnızca %21'ini 0,1'den fazla değiştirmiştir.
+* **İnsan değerlendirmesi:** Ön kayıtta öngörülen, 30 jüri gerekçesinin üç bağımsız değerlendirici tarafından kör
+  puanlanması zaman kısıtı nedeniyle gerçekleştirilememiş ve sonraki çalışmaya bırakılmıştır. Değerlendirme
+  formları hazırlanmıştır (`docs/report/rubric/`).
+* **İkinci hipotezin (H2) sonucu:** Bulgular H2'nin yalnızca biçimsel ve mekanik bileşenlerini (girdiye sadakat,
+  tekrarlanabilirlik ve girdi gürültüsüne dayanıklılık) kısmen desteklemektedir. Bir gerekçenin yalnızca verilen
+  girdilere atıf yapması (%99,7), o gerekçenin finansal açıdan doğru veya açıklayıcı olduğunu tek başına kanıtlamaz.
+  İnsan değerlendirmesi yapılamadığından gerekçelerin algılanan açıklayıcılığı hakkında nihai bir sonuç
+  çıkarılmamıştır. Sonraki çalışmada insan değerlendirmesi; (i) girdilere sadakat, (ii) finansal mantık tutarlılığı,
+  (iii) puan-gerekçe uyumu ve (iv) açıklayıcılık olmak üzere önceden tanımlanmış dört ölçüt üzerinden körleme
+  protokolüyle yapılacaktır.
 
-### 4.4 Genel değerlendirme
-* **Ana bulgu.** Bu projede kurulan hibrit sistem uçtan uca çalışmaktadır: veri toplama, hayatta kalma yanlılığı
-  giderilmiş evren, zaman açısından sızıntısız özellik deposu, kural tabanlı aday üretimi, LLM jürisi, geriye dönük
-  test, denetimler ve ileriye dönük karar üretimi. Ancak 2018–2024 döneminde yerel 9 milyar parametreli bir
-  modelden oluşan jüri, kural tabanlı Top-10 adaylar arasından daha iyi getiri sağlayan hisseleri seçememiştir.
-  H1 desteklenmemiştir. Bu "olumsuz" sonuç, ön kayıt, körleme ve rastgele jüri karşılaştırmasıyla sınandığı için
-  güvenilirdir: LLM'in finansal göstergeleri tutarlı ve okunabilir biçimde yorumlaması (bkz. 4.3), tek başına
-  ek getiri anlamına gelmemektedir.
-* **İşlem maliyeti etkisi.** Jüri sıralaması aydan aya daha fazla değiştiği için hibrit Top-3'ün aylık portföy
-  devri %48'dir (kural tabanlıda %30). Maliyetsiz senaryoda bile hibrit Top-3 (TL CAGR %39,7) kural tabanlı Top-3'ün
-  (%43,9) gerisindedir; yani fark yalnızca maliyetten kaynaklanmamaktadır.
-* **İstatistiksel güç.** 84 aylık örneklemde %80 güçle saptanabilecek en küçük aylık aktif getiri Top-3 için
-  yaklaşık %2,1'dir (yıllık ~%25). Daha küçük etkiler bu dönemde ayırt edilemez; sonuç, "jüri büyük bir katkı
-  sağlamamaktadır" biçiminde okunmalıdır.
-* **Hedeflerle karşılaştırma.** Öneride hedeflenen nominal %15 CAGR tüm portföylerde aşılmış, ancak bu dönemin
-  enflasyonundan kaynaklanmıştır; Sharpe > 1,2 hedefine politika faizi düşüldüğünde hiçbir portföy ulaşamamıştır.
-  Projenin yazılım, açık kaynak ve raporlama hedefleri gerçekleştirilmiştir.
-* **Ön kayıt v1 ile v2.** İlk dondurulan uygulama (prereg-v1) da jüriyle sonuna kadar koşturulmuştur (84 ay, 2.520 değerlendirme, çekimser oranı %0). Bu sürümde hibrit Top-3'ün TL CAGR'si %31,7, kural tabanlı Top-3'ünkü %34,2'dir. Hibrit ile kural tabanlı arasındaki aylık fark −%0,18'dir (NW t −0,24; p 0,81). Hibrit, rastgele jüri dağılımının 37. yüzdeliğinde kalmıştır. Düzeltilmiş v2'de aynı fark −%0,43'tür (t −0,56; p 0,58), rastgele jüri yüzdeliği 41'dir. İki sürümde de jüri portföy devrini artırmış (%50 ve %48; kural tabanlıda %32 ve %30) ve ek getiri sağlamamıştır. H1'in desteklenmemesi, v1'den v2'ye yapılan uygulama düzeltmelerinden bağımsızdır.
-* **Sınırlılıklar.** Tek bir model ailesi (Qwen) kullanılmıştır; 2018–2024 dönemi modelin eğitim verisi kapsamında
-  kaldığı için ezber/sızıntı denetimleri yapılmış (bkz. 4.3), en temiz test ise eğitim tarihinden sonraki ileriye
-  dönük koşudur ve bu koşu henüz kısa bir süreyi kapsamaktadır. Jüriye yalnızca sayısal göstergeler verilmiştir.
-* **Gelecek çalışmalar.** Farklı model aileleriyle (Gemma, Llama) çapraz jüri; KAP bildirim metinlerinin jüriye
-  maskeleme denetimiyle eklenmesi; aday havuzunun genişletilmesi (Top-20/30) ile jürinin seçme payının artırılması;
-  ileriye dönük aylık koşunun sürdürülmesi.
+### 4.4 Genel Değerlendirme
+* **Ana bulgu:** Proje kapsamında geliştirilen hibrit sistem; veri toplama, hayatta kalma yanlılığından
+  arındırılmış evren, sızıntısız özellik deposu, kural tabanlı aday üretimi, jüri değerlendirmesi, geriye dönük
+  test, sistem denetimleri ve ileriye dönük karar üretimi aşamalarıyla uçtan uca çalışmaktadır. Ancak 2018–2024
+  döneminde 9 milyar parametreli yerel bir modelden oluşan jüri, kural tabanlı en iyi 10 aday arasından daha yüksek
+  getiri sağlayan hisseleri seçememiş ve H1 desteklenmemiştir. Bu olumsuz sonuç ön kayıt, körleme ve rastgele jüri
+  karşılaştırmasıyla elde edildiği için güvenilirdir. LLM'in finansal göstergeleri tutarlı ve okunabilir biçimde
+  yorumlaması, tek başına ek getiri sağladığı anlamına gelmemektedir.
+* **Problem tanımına göre değerlendirme:** 1.1'de tanımlanan üç alt sorundan veri sorunu (zaman noktası doğru,
+  hayatta kalma yanlılığından arındırılmış BIST verisi) ve değerlendirme sorunu (maskeleme, ön kayıt ve rastgele
+  jüri ile sızıntıya ve şansa karşı denetlenmiş test) çözülmüştür. Yöntem sorununda iki katmanlı yapı çalışır
+  durumdadır ve gerekçeli kararlar üretmektedir; ancak jüri katmanının getiriye anlamlı bir katkısı
+  gösterilememiştir.
+* **İşlem maliyeti etkisi:** Jüri sıralaması aydan aya daha fazla değiştiği için hibrit Top-3 portföyünün aylık
+  devir oranı %48'e ulaşırken kural tabanlı sistemde bu oran %30'da kalmıştır. İşlem maliyetleri sıfır kabul
+  edildiğinde de hibrit sistemin %39,7 olan TL bazlı yıllık bileşik getirisi kural tabanlı sistemin %43,9'luk
+  getirisinin gerisinde kalmıştır; aradaki fark yalnızca işlem maliyetlerinden kaynaklanmamaktadır.
+* **İstatistiksel güç:** 84 aylık örneklemde %80 güçle saptanabilecek en küçük aylık aktif getiri, Top-3 portföyü
+  için aylık yaklaşık %2,1 (yıllık yaklaşık %25) düzeyindedir. Daha küçük etkiler bu dönemde ayırt edilemediğinden
+  sonuçlar "jürinin büyük bir katkısı yoktur" biçiminde yorumlanmalıdır.
+* **Hedeflerle karşılaştırma:** Önerideki %15'lik nominal yıllık bileşik getiri hedefi tüm portföylerde aşılmış
+  olsa da bu, dönemin yüksek enflasyonundan kaynaklanmaktadır. Politika faizi risksiz getiri olarak düşüldüğünde
+  1,2'lik Sharpe hedefine hiçbir portföy ulaşamamıştır. Projenin yazılım, açık kaynak ve raporlama hedefleri ise
+  yerine getirilmiştir.
+* **Ön kayıt sürümleri arasındaki farklar:** İlk dondurulan sürüm (v1) 84 ay boyunca 2.520 değerlendirmeyle ve %0
+  çekimser oranıyla baştan sona koşturulmuştur. Bu sürümde hibrit Top-3'ün TL bazlı yıllık bileşik getirisi %31,7,
+  kural tabanlı sisteminki %34,2'dir; aylık fark −%0,18 (t = −0,24; p = 0,81), rastgele jüri yüzdeliği 37'dir.
+  Düzeltilmiş v2 sürümünde aylık fark −%0,43 (t = −0,56; p = 0,58), rastgele jüri yüzdeliği 41'dir. Her iki sürümde
+  de jüri portföy devrini (%50 ve %48; kural tabanlı sistemde %32 ve %30) artırmış ve ek getiri sağlamamıştır.
+  H1'in desteklenmemesi, sürümler arasındaki uygulama düzeltmelerinden bağımsızdır.
+* **Sınırlılıklar:** Yalnızca Qwen model ailesi kullanılmıştır. Test edilen 2018–2024 dönemi modelin eğitim verisi
+  kapsamında kaldığı için ezber ve sızıntı denetimleri yapılmıştır; en güvenilir test, modelin eğitim tarihinden
+  sonraki ileriye dönük değerlendirmedir ve bu koşu henüz kısa bir dönemi kapsamaktadır. Jüriye yalnızca sayısal
+  göstergeler sunulmuştur.
+* **Gelecek çalışmalar:** Gemma ve Llama gibi farklı model aileleriyle çapraz jüri kurulması; KAP bildirim
+  metinlerinin maskeleme denetimiyle jüriye eklenmesi; aday havuzunun 20 veya 30 hisseye çıkarılarak jürinin seçme
+  esnekliğinin artırılması; ölçekten bağımsız (z-skor veya sıra tabanlı) puan birleştirmenin yeni bir ön kayıtla
+  sınanması ve ileriye dönük aylık koşuların sürdürülmesi hedeflenmektedir.
 
-## 5. Çıktılar (yayınlar, sunumlar vb.)
-* Açık kaynak yazılım deposu: `bistmas` (GitHub; veri toplama, skorlama, jüri, geriye dönük test, denetim ve
-  raporlama modülleri, testler ve belgeler): https://github.com/vedattatli/bistmas-2209a (herkese açık). Ön kayıt
-  etiketlerini içeren tam geliştirme geçmişi kişisel iletişim bilgileri barındırdığı için özel depoda tutulmakta,
-  talep hâlinde paylaşılabilmektedir.
-* Ön kayıt belgeleri (`prereg-v1`, `prereg-v2`), veri sözlüğü, veri yönetişimi belgesi ve deney defteri.
-* İleriye dönük karar raporu ve e-posta raporu prototipi (Ek-1: 2026-09 kararı).
-* Sonuç tabloları ve şekiller (TL/USD/reel net değer eğrileri, yıllık aktif getiriler, jüri skor tanılamaları).
-* Yazılım deposunun README dosyasında ve bu raporda projenin TÜBİTAK 2209-A Üniversite Öğrencileri Araştırma Projeleri Destek Programı kapsamında desteklendiği belirtilmiştir.
-* Proje süresi içinde yayımlanmış veya gönderilmiş bir bildiri ya da makale bulunmamaktadır; sonuçların bildiri
-  olarak hazırlanması sonraki çalışmalara bırakılmıştır.
+## 5. Çıktılar (Yayınlar, Sunumlar vb.)
+* **Açık kaynak yazılım deposu:** Veri toplama, skorlama, jüri değerlendirmesi, geriye dönük test, sistem
+  denetimi ve raporlama modülleri ile test ve belgeleri içeren bistmas yazılım deposu GitHub üzerinden herkese açık
+  olarak paylaşılmıştır: https://github.com/vedattatli/bistmas-2209a. Ön kayıt etiketlerini içeren tam geliştirme
+  geçmişi kişisel iletişim bilgileri barındırdığından özel bir depoda tutulmakta, talep hâlinde paylaşılabilmektedir.
+* **Belge ve defterler:** Birinci ve ikinci ön kayıt belgeleri (prereg-v1, prereg-v2), veri sözlüğü, veri
+  yönetişimi belgesi ve deney defteri.
+* **Rapor prototipleri:** Eylül 2026 kararını içeren ileriye dönük karar raporu ve e-posta raporu prototipi
+  (Ek-1).
+* **Görsel ve tablolar:** TL, ABD doları ve reel net değer eğrileri, yıllık aktif getiriler ve jüri skor
+  tanılamalarını içeren sonuç tabloları ve şekiller.
+* **Destek beyanı:** Yazılım deposunun bilgi dosyasında (README) ve bu raporda projenin TÜBİTAK 2209-A Üniversite
+  Öğrencileri Araştırma Projeleri Destek Programı kapsamında desteklendiği belirtilmiştir.
+* **Yayın durumu:** Proje süresi içinde yayımlanmış veya gönderilmiş bir bildiri ya da makale bulunmamaktadır;
+  sonuçların bilimsel bir bildiri hâline getirilmesi sonraki çalışmalara bırakılmıştır.
 
-## 6. Proje ile ilgili harcama kalemleri hakkında ayrıntılı bilgi
-Projeye 9.000 TL destek sağlanmıştır. Destek, önerideki "hizmet alımı" kalemi kapsamında yapay zekâ hizmet alımına
-kullanılmıştır:
+## 6. Proje ile İlgili Harcama Kalemleri Hakkında Ayrıntılı Bilgi
+Projeye toplam 9.000 TL destek sağlanmıştır. Destek, proje önerisinde belirtilen hizmet alımı kalemi kapsamında
+yapay zekâ hizmeti alımında kullanılmıştır:
 
 | Kalem | Açıklama | Tutar |
 |---|---|---|
-| Hizmet alımı — yapay zekâ | Anthropic Claude Max aboneliği, 1. ay (Google Play, sipariş no GPA.3368-3344-9472-70602) | 04.08.2026 — 9.999,88 TL (1.666,65 TL KDV dahil) |
-| Hizmet alımı — yapay zekâ | Aynı aboneliğin yenilemesi (sipariş no GPA.3368-3344-9472-70602..0) | 04.09.2026 — 9.999,88 TL (1.666,65 TL KDV dahil) |
-| Hizmet alımı — yapay zekâ | Aboneliğin yeniden başlatılması (sipariş no GPA.3361-7364-6447-12686) | 18.10.2026 — 6.999,99 TL (1.166,66 TL KDV dahil) |
+| Hizmet alımı — yapay zekâ | Anthropic Claude Max aboneliği, 1. ay (Google Play, sipariş no GPA.3368-3344-9472-70602) | 04.08.2026 — 9.999,88 TL (1.666,65 TL KDV dâhil) |
+| Hizmet alımı — yapay zekâ | Aynı aboneliğin yenilemesi (sipariş no GPA.3368-3344-9472-70602..0) | 04.09.2026 — 9.999,88 TL (1.666,65 TL KDV dâhil) |
+| Hizmet alımı — yapay zekâ | Aboneliğin yeniden başlatılması (sipariş no GPA.3361-7364-6447-12686) | 18.10.2026 — 6.999,99 TL (1.166,66 TL KDV dâhil) |
 | Toplam | | 26.999,75 TL |
 
-Claude Max aboneliği, yazılım geliştirme, veri analizi ve raporlamada kullanılan yapay zekâ destekli kodlama ve
-analiz aracıdır (bkz. 3.8). Abonelik bedelinin 9.000 TL'si TÜBİTAK desteğinden, kalan 17.999,75 TL'si yürütücü
-tarafından karşılanmıştır; iade edilecek kullanılmamış tutar yoktur. Ödemeler Google Play üzerinden yapıldığı için
-harcama belgeleri, yürütücü adına düzenlenmiş Google Play sipariş makbuzlarıdır (KDV gösterilmiştir) ve Ek-2'de verilmiştir.
+Proje kapsamında yazılım geliştirme, veri analizi ve raporlama süreçlerinde yapay zekâ destekli kodlama ve analiz
+aracı olan Claude Max aboneliği kullanılmıştır (bkz. 3.8). Toplam abonelik bedelinin 9.000 TL'lik kısmı TÜBİTAK
+desteğiyle, kalan 17.999,75 TL'si ise proje yürütücüsü tarafından karşılanmış olup iade edilecek kullanılmamış bir
+bakiye bulunmamaktadır. Ödemeler Google Play üzerinden gerçekleştirildiğinden harcama belgeleri, yürütücü adına
+düzenlenmiş KDV dâhil sipariş makbuzlarıdır ve Ek-2'de sunulmuştur.
 
-Veri için ücret ödenmemiştir: fiyat ve finansal tablo verileri ücretsiz kamu kaynaklarından (KAP, Borsa İstanbul
-DataStore ücretsiz dosyaları, İş Yatırım, TCMB EVDS) sağlanmış; araştırma konusu olan LLM jürisi ekibin kendi
-bilgisayarında yerel olarak çalıştırıldığı için API ücreti doğmamıştır.
+Veri temini için herhangi bir ücret ödenmemiş; fiyat ve finansal tablo verileri KAP, Borsa İstanbul DataStore, İş
+Yatırım ve TCMB EVDS gibi ücretsiz kamu kaynaklarından elde edilmiştir. Araştırma konusu olan jüri modeli ekibin
+kendi bilgisayarında yerel olarak çalıştırıldığı için API ücreti de doğmamıştır.
+
+## 7. Kaynakça
+Asness, C. S., Moskowitz, T. J., & Pedersen, L. H. (2013). Value and momentum everywhere. *The Journal of Finance, 68*(3), 929–985. https://doi.org/10.1111/jofi.12021
+
+Bailey, D. H., & López de Prado, M. (2014). The deflated Sharpe ratio: Correcting for selection bias, backtest overfitting and non-normality. *The Journal of Portfolio Management, 40*(5), 94–107. https://doi.org/10.3905/jpm.2014.40.5.094
+
+Borsa İstanbul. (2026). *DataStore: Geçmiş dönem endeks kapsamları ve ağırlıkları veri seti* [Veri seti]. https://datastore.borsaistanbul.com
+
+Choi, C., Lopez-Lira, A., Lee, Y., Kwon, J., Kim, M., Hwang, J., ... & Kim, J. (2025). *Structuring the unstructured: A multi-agent system for extracting and querying financial KPIs and guidance* (arXiv:2505.19197). arXiv. https://arxiv.org/abs/2505.19197
+
+DeMiguel, V., Garlappi, L., & Uppal, R. (2009). Optimal versus naive diversification: How inefficient is the 1/N portfolio strategy? *The Review of Financial Studies, 22*(5), 1915–1953. https://doi.org/10.1093/rfs/hhm075
+
+Demirtaş, Ş. C., & Çakmak Şahin, S. (2023). Ajan bazlı finansal modelleme ve uygulama prosedürü. *Politik Ekonomik Kuram, 7*(2), 201–214. https://doi.org/10.30586/pek.1315128
+
+Dodnikov, R. (2024). Workflow optimization in finance using multi-agent systems. *Innovative Information Technologies for Economy Digitalization (IITED)*, (1), 182–188.
+
+Fama, E. F., & French, K. R. (1993). Common risk factors in the returns on stocks and bonds. *Journal of Financial Economics, 33*(1), 3–56. https://doi.org/10.1016/0304-405X(93)90023-5
+
+Glasserman, P., & Lin, C. (2023). *Assessing look-ahead bias in stock return predictions generated by GPT sentiment analysis* (arXiv:2309.17322). arXiv. https://arxiv.org/abs/2309.17322
+
+İş Yatırım. (2026). *Tarihsel hisse senedi fiyat verileri* [Veri seti]. İş Yatırım Menkul Değerler A.Ş. https://www.isyatirim.com.tr
+
+Jegadeesh, N., & Titman, S. (1993). Returns to buying winners and selling losers: Implications for stock market efficiency. *The Journal of Finance, 48*(1), 65–91. https://doi.org/10.1111/j.1540-6261.1993.tb04702.x
+
+Kamuyu Aydınlatma Platformu [KAP]. (2026). *Finansal tablolar ve şirket bildirimleri arşivi* [Veri seti]. Merkezi Kayıt Kuruluşu. https://www.kap.org.tr
+
+Krippendorff, K. (2004). Reliability in content analysis: Some common misconceptions and recommendations. *Human Communication Research, 30*(3), 411–433. https://doi.org/10.1111/j.1468-2958.2004.tb00738.x
+
+Li, Y., Yu, Y., Li, H., Chen, Z., & Khashanah, K. (2023). *TradingGPT: Multi-agent system with layered memory and distinct characters for enhanced financial trading performance* (arXiv:2309.03736). arXiv. https://arxiv.org/abs/2309.03736
+
+Lopez-Lira, A., Tang, Y., & Zhu, M. (2025). *The memorization problem: Can we trust LLMs' economic forecasts?* (arXiv:2504.14765). arXiv. https://arxiv.org/abs/2504.14765
+
+Newey, W. K., & West, K. D. (1987). A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent covariance matrix. *Econometrica, 55*(3), 703–708. https://doi.org/10.2307/1913610
+
+Nguyen, T. D., Pham, L. H., & Sun, J. (2025). *AUTOLAW: Enhancing legal compliance in large language models via case law generation and jury-inspired deliberation* (arXiv:2505.14015). arXiv. https://arxiv.org/abs/2505.14015
+
+Ollama. (2026). *Ollama: Yerel büyük dil modeli çalıştırma ortamı* [Yazılım]. https://ollama.com
+
+Pandey, V., Ng, W. K., & Lim, E. P. (2000). Financial advisor agent in a multi-agent financial trading system. In *Proceedings of the 11th International Workshop on Database and Expert Systems Applications* (pp. 482–486). IEEE.
+
+Politis, D. N., & Romano, J. P. (1994). The stationary bootstrap. *Journal of the American Statistical Association, 89*(428), 1303–1313. https://doi.org/10.1080/01621459.1994.10476870
+
+Qwen Team. (2026). *Qwen3.5: Towards native multimodal agents*. https://qwen.ai/blog?id=qwen3.5
+
+Raudys, Š., & Zliobaite, I. (2006). The multi-agent system for prediction of financial time series. In *Artificial Intelligence and Soft Computing – ICAISC 2006* (pp. 653–662). Springer.
+
+Türkiye Cumhuriyet Merkez Bankası [TCMB]. (2026). *Elektronik Veri Dağıtım Sistemi (EVDS): Enflasyon, döviz kurları ve politika faizi serileri* [Veri seti]. https://evds2.tcmb.gov.tr
+
+Xiao, Y., Sun, E., Luo, D., & Wang, W. (2024). *TradingAgents: Multi-agents LLM financial trading framework* (arXiv:2412.20138). arXiv. https://arxiv.org/abs/2412.20138
+
+Yıldız, A. (2022). Finans alanında yapay zekâ teknolojisinin kullanımı: Sistematik literatür incelemesi. *Pamukkale Üniversitesi Sosyal Bilimler Enstitüsü Dergisi*, (52), 47–66.
+
+Yu, Y., Yao, Z., Li, H., Deng, Z., Jiang, Y., Cao, Y., ... & Xie, Q. (2024a). FinCon: A synthesized LLM multi-agent system with conceptual verbal reinforcement for enhanced financial decision making. *Advances in Neural Information Processing Systems, 37*, 137010–137045.
+
+Yu, Y., Li, H., Chen, Z., Jiang, Y., Li, Y., Zhang, D., Liu, R., Suchow, J. W., & Khashanah, K. (2024b). FinMem: A performance-enhanced LLM trading agent with layered memory and character design. *Proceedings of the AAAI Symposium Series, 3*(1), 595–597. https://doi.org/10.1609/aaaiss.v3i1.31290
 
 ---
-Proje yürütücüsü: Vedat Ali Tatlı — imza  Danışman: Hayri Öztürk — imza  Tarih: 22.10.2026
+Proje yürütücüsü: Vedat Ali Tatlı — imza  Danışman: Hayri Öztürk — imza  Tarih: 30.10.2026

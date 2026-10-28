@@ -7,8 +7,8 @@ a small shared core. Import boundaries between areas are enforced with `import-l
 | Area | Owner | Packages | Deliverables (proposal work packages) |
 |---|---|---|---|
 | Data layer | Vedat Ali Tatlı | `bistmas.data` (+ `configs/*.csv`, `docs/data_dictionary.md`, `docs/data_governance.md`) | IP1 candidate-pool agent (universe), IP2 explorer agent (ETL, feature store, point-in-time rules) |
-| Scoring and backtest | Gizem Coşkun | `bistmas.scoring`, `bistmas.backtest` (+ leakage tests) | IP3 producer-filter agent (composite scores, Top-10), IP5 validation (walk-forward backtest, metrics, statistics) |
-| Jury and reporting | Rabia Yeşil | `bistmas.jury` (incl. `audits/`), `bistmas.reporting`, `bistmas.experiments`, `prompts/` (+ e-mail report, paper figures) | IP4 jury agents and consensus, memorisation audits, forward run and reporting |
+| Scoring and backtest | Rabia Yeşil | `bistmas.scoring`, `bistmas.backtest` (+ leakage tests) | IP3 producer-filter agent (composite scores, Top-10), IP5 validation (walk-forward backtest, metrics, statistics) |
+| Jury and reporting | Gizem Coşkun | `bistmas.jury` (incl. `audits/`), `bistmas.reporting`, `bistmas.experiments`, `prompts/` (+ e-mail report, paper figures) | IP4 jury agents and consensus, memorisation audits, forward run and reporting |
 
 Shared core (`bistmas.shared`, `bistmas.cli`, `pyproject.toml`, tests infrastructure) is
 maintained jointly. This table is updated when ownership changes; the git history records the
